@@ -1,0 +1,257 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="../../../bower_components/iron-validatable-behavior/iron-validatable-behavior.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/paper-fab/paper-fab.html">
+
+<dom-module id="my-argenta-form">
+	
+  <template>
+	
+		<style>
+			paper-card {
+				height: 100vh;
+			}
+			code {
+				color: #007000;
+			}
+			google-chart {
+				height : 100px;
+				width  : 400px;
+			}
+			#selection-demo {
+				position: relative;
+				height: 300px;
+			}
+			#selection-chart {
+				float: left;
+			}
+			#selection-display {
+				display: inline-block;
+				position: relative;
+				top: 50%;
+			}
+
+			:host {
+				display: block;
+				width: 100%;
+				margin: auto;
+				xoverflow: hidden;
+			}
+			paper-button, paper-icon-button {
+				-o-transition      : .25s;
+				-ms-transition     : .25s;
+				-moz-transition    : .25s;
+				-webkit-transition : .25s;
+				transition         : .25s;
+			}
+			.blur {
+				-webkit-filter: blur(5px);
+				-moz-filter: blur(5px);
+				-o-filter: blur(5px);
+				-ms-filter: blur(5px);
+				filter: blur(5px);
+			}
+			paper-button:hover,
+			paper-icon-button:hover
+			.primary-button:hover
+			{
+				xbackground: white;
+				xcolor: black;
+				font-weight: bold;
+			}
+			#img-id {
+				border-radius: 50%;
+			}
+			.drop-icon {
+				width: 20px;
+			}
+			.button-primary {
+				background: var(--default-primary-color);
+				color: white;
+			}
+			.button-default {
+				background: white;
+				color: black;
+			}
+			#cards {
+				@apply(--layout-vertical);
+				@apply(--center-justified);
+				xmax-width: 400px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			paper-card {
+				width: 100%;
+				max-width: 400px;
+				margin-bottom: 16px;
+				@apply(--layout-vertical);
+				@apply(--center-justified);
+				margin-left: auto;
+				margin-right: auto;
+			}
+			.avatar {
+				display: inline-block;
+				height: 64px;
+				width: 64px;
+				border-radius: 50%;
+				background: var(--paper-pink-500);
+				color: white;
+				line-height: 64px;
+				font-size: 30px;
+				text-align: center;
+			}
+			.fancy .title {
+				position: absolute;
+				top: 30px;
+				left: 100px;
+				color: var(--paper-indigo-500);
+			}
+			.fancy img {
+				width: 100%;
+			}
+			.fancy .big {
+				font-size: 22px;
+				padding: 8px 0 16px;
+				color: var(--google-grey-500);
+			}
+			.fancy .medium {
+				font-size: 16px;
+				padding-bottom: 8px;
+			}
+			.pink {
+				--paper-card-header-color: var(--paper-pink-500);
+			}
+			paper-fab, #fab {
+				z-index: 9999;
+				xposition: relative;
+				position: absolute;
+				xtop: 148px;
+				xtop: -24px;
+				top: -10px;
+				right: 16px;
+				/*
+				background-color: #f5f5f5;
+				color: #cdcdcd;
+				*/
+			}
+			#fab, #reset, #input {
+				transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1) 500ms, background-color 500ms cubic-bezier(0.4, 0, 0.2, 1);
+				-webkit-transition: -webkit-transform 500ms cubic-bezier(0.4, 0, 0.2, 1) 500ms, background-color 500ms cubic-bezier(0.4, 0, 0.2, 1);
+				/*
+				-webkit-transform: scale(0);
+				transform: scale(0);
+				*/
+				-webkit-transform-origin: 50% 50%;
+				transform-origin: 50% 50%;
+			}
+		</style>
+
+		<!--
+		<iron-localstorage
+			name="my-auth-toolbar"
+			value="{{u}}"
+			xon-iron-localstorage-load-empty="initializeDefaultCartoon"
+  	></iron-localstorage><!-- Write to local storage to maintain user login when screen refreshes -->
+		<div class="xfit layout vertical">
+			<paper-card heading="Estimate Home Value" xclass="pink">
+				<div class="card-content">
+					<paper-fab id="fab"
+										 icon="send"
+										 on-tap="_formSubmit"
+										 disabled
+					></paper-fab>
+					<paper-input value="{{addy::input}}"
+											 id="input"
+											 label="Enter Address"
+					></paper-input>
+				</div>
+				<div class="card-actions layout horizontal center-justified">
+					<paper-button id="reset"
+												on-tap="_formReset"
+												disabled
+					>Reset</paper-button>
+				</div>
+			</paper-card>
+		</div>
+  </template>
+</dom-module>
+
+<script>
+	(function(){	// 5008 corson ave s, seattle, wa // 12420 SE 223rd Drive, Kent, WA 98031
+		Polymer({
+			is: 'my-argenta-form',
+			behaviors: [
+				Polymer.NeonAnimatableBehavior,
+				Polymer.IronFormElementBehavior,
+				Polymer.IronValidatableBehavior
+			],
+			properties: {
+				/*
+				animationConfig: {
+					value: {
+						entry: {
+							name: "slide-from-left-animation",
+							node: this
+						},
+						exit: {
+							name: "fade-out-animation",
+							node: this							
+						}
+					}
+				},
+				*/
+				addy: {
+					type: String,
+					notify: true,
+					observer: '_observeAddyChanges'
+				},
+				addyUrl: String
+			},
+			/*
+			listeners: {
+				'input': '_onInput'
+			},
+			_onInput: function() {
+				this.addy = this.$.input.value;
+			},
+			*/
+			// Overidden from Polymer.IronValidatableBehavior. Will set the `invalid`
+			// attribute automatically, which should be used for styling.
+			_getValidity: function() {
+				return this.value != '';
+			},
+			_formReset: function() {
+				this.fire("my-form-reset");
+			},
+			_formSubmit: function() {
+				this.fire("my-form-submit");
+			},
+			_observeAddyChanges: function() {
+				this._computeTitleCase();
+				this._handleButtonsEnabled();
+			},
+			_computeTitleCase: function() {
+				this.addy = this.addy.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+			},
+			_handleButtonsEnabled: function() {
+				this.$.fab.disabled = !this.addy.length;
+				this.$.reset.disabled = !this.addy.length;
+				this.fire("my-form-wipe-error");
+			}
+		});
+	})();
+</script>

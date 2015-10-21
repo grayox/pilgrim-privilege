@@ -1,0 +1,206 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<!--
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+-->
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<!--
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
+-->
+<link rel="import" href="../../../bower_components/neon-animation/animations/slide-from-right-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/slide-left-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/slide-up-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/slide-down-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../../../bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../../../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../my-argenta-data/my-argenta-data.html">
+<link rel="import" href="../my-argenta-form/my-argenta-form.html">
+<link rel="import" href="../my-argenta-image/my-argenta-image.html">
+<link rel="import" href="../my-argenta-result/my-argenta-result.html">
+<link rel="import" href="../my-argenta-scatter/my-argenta-scatter.html">
+<link rel="import" href="../my-toolbar-login/my-toolbar-login.html">
+
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+
+<dom-module id="my-argenta-view">	
+		
+	<template xis="dom-bind">
+		
+		<style is="custom-style">
+			:host {
+				x--paper-tabs-selection-bar-color: var(--accent-color); /*var(--default-primary-color);*/
+				--paper-button: {
+					@apply(--layout-horizontal);
+					x@apply(--layout-center);
+				  x@apply(--layout-vertical);
+				  @apply(--center-justified);				};
+			}
+			/*
+			:root /deep/ #ink {
+				color: white;
+			}
+			*/
+			paper-tabs {
+				width: 100%;
+				max-width: 400px;
+				xmargin-bottom: 16px;
+				xmargin-left: auto;
+				xmargin-right: auto;
+				position: fixed;
+				bottom: 0;
+				margin: 0;
+			}
+			paper-tabs {
+				background-color: var(--default-primary-color);
+				color: #eee;
+				xbox-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+			}
+			paper-icon-button {
+				xmargin-left: 30px;
+				display: block;
+				width: 24px;
+				text-align: center;
+			}
+		</style>
+		
+		<my-argenta-data id="data"
+										 addy="[[addy]]"
+										 response="{{response}}"
+										 on-my-data-request="_handleRequest"
+										 on-my-data-response="_handleResponse"
+										 on-my-data-error="_handleError"
+		></my-argenta-data>
+		<neon-animated-pages class="flex"
+												 selected="[[selected]]"
+												 entry-animation="fade-in-animation"
+												 exit-animation="fade-out-animation"
+		>
+		<!--
+		<iron-pages class="flex" selected="[[selected]]">
+		-->
+			<my-argenta-form id="form"
+											 addy="{{addy}}"
+											 on-my-form-reset="_handleFormReset"
+											 on-my-form-submit="_handleFormSubmit"
+											 on-my-form-wipe-error="_handleWipeError"
+			></my-argenta-form>
+			<my-argenta-result id="result"
+												 addy="[[addy]]"
+												 estimate="[[response.autoEst]]"
+												 estimate_display="{{estimate_display}}"
+												 on-my-result-reset="_handleResultReset"
+			></my-argenta-result>
+			<my-argenta-image id="image"
+												addy="[[addy]]"
+												imageurl="[[response.image]]"
+												estimate="[[estimate_display]]"
+			></my-argenta-image>
+			<my-argenta-scatter id="scatter"
+													addy="[[addy]]"
+													response="[[response]]"
+													estimate="[[estimate_display]]"
+			></my-argenta-scatter>
+		<!--
+		</iron-pages>
+		-->
+		</neon-animated-pages>
+		
+		<paper-tabs selected="{{selected}}" align-bottom>
+			<!--
+			<paper-tab><iron-icon icon="social:group"   alt="Referrals"></iron-icon></paper-tab>
+			<paper-tab><iron-icon icon="account-circle" alt="Account"></iron-icon></paper-tab>
+			<paper-tab><iron-icon icon="cancel"         alt="Reset"></iron-icon></paper-tab>
+			<paper-tab><iron-icon icon="history"        alt="History"></iron-icon></paper-tab>
+			<paper-tab><iron-icon icon="save"           alt="Save"></iron-icon></paper-tab>
+			-->
+			<paper-tab><iron-icon icon="home"           alt="Home"></iron-icon></paper-tab>
+			<paper-tab><iron-icon icon="star"           alt="Result"></iron-icon></paper-tab>
+			<paper-tab><iron-icon icon="perm-media"     alt="Picture"></iron-icon></paper-tab>
+			<paper-tab><iron-icon icon="assessment"     alt="Chart"></iron-icon></paper-tab>
+		</paper-tabs>
+	
+	</template>
+
+	<script>
+		(function(){
+			Polymer({
+				is: 'my-argenta-view',
+				behaviors: [Polymer.NeonAnimatableBehavior],
+				listeners: {
+					//"my-form-reset"      : "_handleFormReset"  ,
+					//"my-form-submit"     : "_handleFormSubmit" ,
+					//"my-form-wipe-error" : "_handleWipeError"		
+				},
+				properties: {
+					selected: {
+						type: Number,
+						value: 0
+					},
+					response: {
+						type: Object,
+						notify: true
+					},
+					estimate_display: {
+						type: String,
+						notify: true
+					}
+				},
+				_resetData: function() {
+					this.response = null;
+					this.$.scatter.$.chart.hidden = true;
+					this.$.result.$.error.hidden = true;
+				},
+				_handleFormReset: function() {
+					this.addy = "";
+					this._resetData();
+				},
+				_handleFormSubmit: function() {
+					this._resetData();
+					this.selected = 1;
+					this.$.form.$.fab.disabled = true;
+					this.$.data.generateRequest();
+				},
+				_handleRequest: function() {
+					this.$.result.$.spinner.reset();
+					this.$.result.$.spinner.active = true;
+				},
+				_handleResponse: function() {
+					this.$.result.$.spinner.reset();
+					this.$.result.$.spinner.active = false;
+					if(this.estimate_display){
+						this.$.scatter.$.chart.hidden = false;
+					}
+					else{
+						this._handleError();
+					}
+				},
+				_handleError: function() {
+					this.$.result.$.spinner.reset();
+					this.$.result.$.spinner.active = false;
+					this.$.result.$.error.hidden = false;
+				},
+				_handleWipeError: function() {
+					this.$.result.$.error.hidden = true;
+				},
+				_handleResultReset: function() {
+					this.selected = 0;
+				}
+			});
+		})();
+	</script>
+	
+</dom-module>

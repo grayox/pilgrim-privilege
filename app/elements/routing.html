@@ -1,0 +1,72 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<script src="../../bower_components/page/page.js"></script>
+<script>
+  window.addEventListener('WebComponentsReady', function() {
+
+    // We use Page.js for routing. This is a Micro
+    // client-side router inspired by the Express router
+    // More info: https://visionmedia.github.io/page.js/
+		
+    page('/', function () {
+      app.route = 'page01';
+    });
+
+    page('/page02', function () {
+      app.route = 'page02';
+    });
+
+    page('/page03', function (data) {
+      app.route = 'page03';
+      app.params = data.params;
+    });
+
+    page('/page03', function () {
+      app.route = 'page04';
+    });
+		
+    page('/page05', function (data) {
+      app.route = 'page05';
+      app.params = data.params;
+    });
+
+    page('/page06', function () {
+      app.route = 'page06';
+    });
+
+    page('/page06/:name', function (data) {
+      app.route = 'page06-info';
+      app.params = data.params;
+    });
+
+    page('/page07',function(){app.route='page07';});
+    page('/page08',function(){app.route='page08';});
+    page('/page09',function(){app.route='page09';});
+    page('/page10',function(){app.route='page10';});
+    page('/page11',function(){app.route='page11';});
+    page('/page12',function(){app.route='page12';});
+		
+    // add #! before urls
+    page({
+      hashbang: true
+    });
+		/*
+		<more-routing-config driver="hash"></more-routing-config>
+		<more-route name="home"          path="/"             ></more-route>
+		<more-route name="buy"           path="/buy"          ></more-route>
+		<more-route name="sell"          path="/sell"         ></more-route>
+		<more-route name="settlement"    path="/settlement"   ></more-route>
+		<more-route name="settings"      path="/settings"     ></more-route>
+		<more-route name="settings-info" path="/settings-info"></more-route>
+		<more-route name="support"       path="/support"      ></more-route>
+		*/
+  });
+</script>

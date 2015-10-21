@@ -1,0 +1,100 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<!--
+<link rel="import" href="../../../bower_components/chart-elements/chart-elements.html">
+-->
+
+<dom-module id="my-argenta-scatter">
+	
+  <template>
+		
+		<style>
+			:host {
+				display: block;
+			}
+			paper-card {
+				width: 100%;
+				height: 100vh;
+				max-width: 400px;
+				margin-bottom: 16px;
+				@apply(--layout-vertical);
+				@apply(--center-justified);
+				margin-left: auto;
+				margin-right: auto;
+			}
+		</style>
+	
+		<paper-card heading="Scatter Chart" xclass="pink">
+			<div class="card-content" id="chart" xhidden$="{{response}}">
+				<div>{{addy}}</div>
+				<h4>{{estimate}}</h4>
+				<google-chart type='scatter'
+											options='{
+																"animation": {
+																	"duration": 250
+																},
+																"legend": "none",
+																"hAxis": {"minValue":0},
+																"vAxis": {
+																	"minValue": 0,
+																	"maxValue": 1, 
+																	"gridlines": {"count": 1}
+																	},
+																"pointSize":10,
+																"xcrosshair": { "trigger": "both" },
+																"pointShape":"diamond"
+															 }'
+											data='{{scatter_data}}'
+											xdata='[
+															["A", "B"],
+															[ 20,   0],
+															[ 31,   0],
+															[ 50,   0],
+															[ 77,   0],
+															[ 68,   0]
+														]'
+				></google-chart>
+			</div>
+		</paper-card>
+	</template>
+
+	<script>
+	(function() {
+		Polymer({
+			is: 'my-argenta-scatter',
+			behaviors: [Polymer.NeonAnimatableBehavior],
+			properties: {
+				addy: String,
+				estimate: String,
+				response: Object,
+				scatter_data: {
+					type: String,
+					computed: '_computeScatterData(response)',
+					notify: true
+				}
+			},
+			_computeScatterData: function(ob) {
+				//console.log(ob);
+				if(!ob){return null;}
+				var out=[["Value","Point Type"],[ob.autoEst,0]],ar=ob.set,i=ar.length;
+				while (i---1) {
+					out.push([parseInt(ar[i]),1]);
+				}
+				//var out = JSON.stringify(out);
+				//console.log(out);
+				return out;//'[["A", "B"],[ 20,   0],[ 31,   0],[ 50,   0],[ 77,   0],[ 68,   0]]'
+			}
+		});
+	})();
+	</script>
+
+</dom-module>

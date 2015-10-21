@@ -1,0 +1,114 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<!-- Iron elements -->
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<!-- Added -->
+<link rel="import" href="../../bower_components/firebase-element/firebase-auth.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -->
+<link rel="import" href="../../bower_components/firebase-element/firebase-document.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -->
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+<!--
+<link rel="import" href="../../bower_components/iron-meta/iron-meta.html">
+<link rel="import" href="../../bower_components/iron-signals/iron-signals.html">
+-->
+
+<!-- Paper elements -->
+<link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-styles/paper-styles-classes.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+	<!-- Added -->
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<!--<link rel="import" href="../../bower_components/paper-dropdown/paper-dropdown.html">--><!--Vulcanize error-->
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<!--<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">--><!--Vulcanize error-->
+<!-- To be replaced in 1.0
+		 See roadmap here: https://github.com/PolymerElements/paper-elements
+											 https://github.com/Polymer/paper-dropdown-menu/issues/63 -- >
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html"> 
+<link rel="import" href="../../bower_components/core-menu/core-menu.html">
+<link rel="import" href="../../bower_components/core-submenu/core-submenu.html">
+<link rel="import" href="../../bower_components/core-item/core-item.html"> -->
+
+<!-- Platinum elements -->
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-cache.html">
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-register.html">
+
+<!-- Google elements -->
+	<!-- Added -->
+<link rel="import" href="../../bower_components/firebase-element/firebase-document.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -->
+<!-- Vulcanize error
+<link rel="import" href="../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../bower_components/google-map/google-map-directions.html">
+<link rel="import" href="../../bower_components/google-map/google-map-marker.html">
+-->
+<!-- Neon elements -->
+	<!-- Added -->
+<link rel="import" href="../../bower_components/neon-animation/neon-animated-pages.html">
+
+<!-- Add your elements here -->
+<link rel="import" href="../styles/app-theme.html">
+	<!-- Added -->
+<link rel="import" href="my-argenta-data/my-argenta-data.html">
+<link rel="import" href="my-argenta-form/my-argenta-form.html">
+<link rel="import" href="my-argenta-image/my-argenta-image.html">
+<link rel="import" href="my-argenta-result/my-argenta-result.html">
+<link rel="import" href="my-argenta-view/my-argenta-view.html">
+<link rel="import" href="my-argenta-scatter/my-argenta-scatter.html">
+<link rel="import" href="my-toolbar-login/my-toolbar-login.html">
+
+
+
+<!-- Third-party elements -->
+
+<!-- Configure your routes here -->
+<link rel="import" href="routing.html">
+
+<!-- Test -- >
+<link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-down-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/slide-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+-->
+
