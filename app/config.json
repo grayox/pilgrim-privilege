@@ -1,0 +1,25 @@
+{
+	
+	"fbID": {
+		
+		"//"     : "// _setBlanks() method on my-view-main element defaults empty strings to .app for any property",
+		
+		"app"    : "blazing-torch-612",
+		
+		"//"     : "// ------- Typically, no properties beneath this line will need to change ------- ",
+		
+		"//"     : "// Central firebase setup for receiving <firebase-auth> 'location' attribute",
+		"//"     : "// Deprecating this concept in favor of individualized (app-specific) auth",
+		"auth"   : "",
+		"//auth" : "torrid-heat-2303",
+		
+		"//"     : "// Central data store for login and activity reporting",
+		"log"    : "",
+		"//log"  : "torrid-heat-2303",
+		
+		"//"     : "Firebase security rules documentation:",
+		"//"     : "// https://www.firebase.com/docs/hosting/guide/full-config.html#section-advanced-properties"
+		
+	}
+	
+}

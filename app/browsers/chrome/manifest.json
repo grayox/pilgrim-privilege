@@ -1,0 +1,29 @@
+{ // https://developer.chrome.com/home/multi-device-pillar
+	// Allows build for Chrome Apps
+	"name": "Argenta",
+	"description": "Automatic value estimates of residential real estate",
+	"version": "0.1",
+	"manifest_version": 2,
+	"app": {
+		/*
+    "urls": [
+      "*://www.blazing-torch-612.firebaseapp.com/",
+      "*://www.google.com/mail/",
+      "*://www.facebook.com/mail/"
+    ],
+		*/
+		"background": {
+			"scripts": [
+				"background.js"
+			]
+		}
+	},
+	"permissions": [
+			"unlimitedStorage",
+			"webview"
+		],
+	"icons": {
+		"16": "icon-16.png",
+		"128": "icon-128.png"
+	}
+}

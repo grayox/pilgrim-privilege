@@ -1,0 +1,167 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/firebase-element/firebase-document.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="../../../bower_components/iron-validatable-behavior/iron-validatable-behavior.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<!--<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">-->
+<link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+
+<dom-module id="my-data-settings">
+	
+  <template>
+	
+		<style>
+			/*
+			paper-toggle-button {
+        display: block;
+        margin-bottom: 40px;
+        --paper-toggle-button-checked-ink-color:       var(--accent-color)         ;
+        --paper-toggle-button-checked-bar-color:       var(--accent-color)         ;
+        --paper-toggle-button-checked-button-color:    var(--accent-color)         ;
+        --paper-toggle-button-unchecked-ink-color:     var(--accent-color)         ;
+        --xpaper-toggle-button-unchecked-bar-color:    var(--paper-light-blue-900) ;
+        --xpaper-toggle-button-unchecked-button-color: var(--paper-light-blue-900) ;
+      }
+			paper-toggle-button:last-of-type {
+        margin-bottom: 0;
+      }
+			*/
+			paper-checkbox {
+        display: block;
+				margin-bottom: 40px;
+        --paper-checkbox-checked-color:      var(--accent-color);
+        --xpaper-checkbox-checked-ink-color: var(--accent-color);
+			}
+			paper-checkbox:last-of-type {
+        margin-bottom: 10px;
+      }
+			paper-card {
+				width: 100%;
+				max-width: 400px;
+				margin-bottom: 16px;
+				@apply(--layout-vertical);
+				@apply(--center-justified);
+				margin-left: auto;
+				margin-right: auto;
+			}
+		</style>
+		<firebase-document id="fbd"
+											 location="[[app.fb.settings]]"
+											 xdata="{{app.settings}"
+											 data="{{settings}}"
+											 xon-firebase-value="_firebaseLoaded">
+		</firebase-document>
+		<div class="xfit layout vertical">
+			<!--
+			<paper-button on-tap="printSettings">Print Settings</paper-button>
+			-->
+			<paper-card heading="Settings">
+				<div class="card-content layout vertical" hidden$="[[app.meta.signedIn]]">
+					<p>Please login to save your user settings.</p>
+					<p>You can save your history and choose to be notified of new products and features.</p>
+				</div>
+			</paper-card>
+			<div hidden$="[[!app.meta.signedIn]]">
+				<paper-card heading="User" xclass="pink">
+					<div class="card-content layout vertical">
+						<paper-input id="name" value="{{settings.name}}" label="Name"
+												 disabled$="[[!app.meta.signedIn]]"></paper-input>
+						<paper-input id="email" value="{{settings.email}}" label="Email"
+												 disabled$="[[!app.meta.signedIn]]"></paper-input>
+					</div>
+				</paper-card>
+				<paper-card heading="Preferences" xclass="pink">
+					<div class="card-content layout vertical">
+						<paper-checkbox id="history" checked="{{settings.history}}"
+														disabled$="[[!app.meta.signedIn]]">Save history</paper-checkbox>
+						<paper-tooltip for="history">
+							Check "Save history" if you want to save your results for later reference.
+						</paper-tooltip>
+					</div>
+				</paper-card>
+				<paper-card heading="Notifications" xclass="pink">
+					<div class="card-content layout vertical">
+						We will notify you of new product releases
+						<p>
+							<paper-checkbox id="batch" checked="{{settings.batch}}"
+															disabled$="[[!app.meta.signedIn]]">Batches</paper-checkbox>
+							<paper-tooltip for="batch">
+								Check "Batches" if you want to be notified when we release our batch processing tool.
+								Use the batch processing tool if you have lists of properties that need to be analyzed
+								with a single click.
+							</paper-tooltip>
+							<paper-checkbox id="finance" checked="{{settings.finance}}"
+															disabled$="[[!app.meta.signedIn]]">Financing</paper-checkbox>
+							<paper-tooltip for="finance">
+								Check "Financing" if you need purchase or takeout financing and wish to be notified
+								when we get lenders in your area join our network to make financing offers to you.
+							</paper-tooltip>
+							<paper-checkbox id="distress" checked="{{settings.distress}}"
+															disabled$="[[!app.meta.signedIn]]">Distressed properties</paper-checkbox>
+							<paper-tooltip for="distress">
+								Check "Distressed properties" if you want to be notified of new distressed properties
+								that come on the market that can be purchased at a discount.
+							</paper-tooltip>
+							<paper-textarea	id="zips" value="{{settings.zips}}"
+															disabled$="[[!app.meta.signedIn]]" label="Zip codes"></paper-textarea>
+							<paper-tooltip for="zips">
+								Enter a list of zip codes separated by commas that represent locations you do business.
+								For every zip code you list we will look for properties within a 15 to 20 mile radius.
+							</paper-tooltip>
+						</p>
+					</div>
+				</paper-card>
+			</div>
+		</div>
+  </template>
+
+	<script>
+		(function(){
+			//'use strict';
+			Polymer({
+				is: 'my-data-settings',
+				properties: {
+					app: {
+						type: Object,
+						notify: true
+						//readOnly: true
+					},
+					settings: {
+						type: Object,
+						notify: true,
+						observer: '_settingsChanged' // Don't bind directly to path: app.settings per http://stackoverflow.com/q/34390361/1640892
+					}
+				},
+				/*
+				printSettings: function() {
+					console.log(this.settings);
+				},
+				_firebaseLoaded: function() {
+					console.log('Firebase Loaded Now');
+					console.log(this.$.fbd);
+					console.log(this.app);
+				},
+				*/
+				_settingsChanged: function() {
+					this.set( 'app.settings', this.settings);
+				}
+			});
+		})();
+	</script>
+	
+</dom-module>

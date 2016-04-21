@@ -7,299 +7,304 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
+<!-- The tags bracketed by this comment (<dom-module> and <template>) were added to apply
+<style is="custom-style" include="app-theme"></style> to main view element.
+To apply to the app's main body and not an element, begin and end this file with <style> tag only.
+-->
+<dom-module id="app-theme">
+  <template>
+		<!--End bracket of added tags-->
+		<style is="custom-style">
 
-<style is="custom-style">
+			/*
+			 Polymer includes a shim for CSS Custom Properties we can use for application theming.
+			 Below, you'll find the default palette for the Polymer Starter Kit layout. Feel free to play
+			 with changing the colors used or generate your own palette of colours at MaterialPalette.com.
 
-  /*
-   Polymer includes a shim for CSS Custom Properties that we can use for application theming.
-   Below, you'll find the default palette for the Polymer Starter Kit layout. Feel free to play
-   with changing the colors used or generate your own palette of colours at MaterialPalette.com.
+			 See https://www.polymer-project.org/1.0/docs/devguide/styling.html#xscope-styling-details
+			 for further information on custom CSS properties.
+			 */
 
-   See https://www.polymer-project.org/1.0/docs/devguide/styling.html#xscope-styling-details
-   for further information on custom CSS properties.
-   */
+			/* Application theme */
 
-  /* Application theme */
+			:root {
+				/*
+				https://www.google.com/design/spec/style/color.html#color-color-palette
+				--default-primary-color: var(--paper-grey-800);
+				--default-primary-color: var(--paper-brown-500);
+				--default-primary-color: var(--paper-cyan-500);
+				--default-primary-color: var(--paper-blue-grey-500);
+				--default-primary-color: var(--paper-amber-700);
+				--default-primary-color: var(--paper-amber-500);
+				--default-primary-color: var(--paper-green-500);
+				--default-primary-color: var(--paper-purple-500);
+				--default-primary-color: var(--paper-pink-400);
+				--default-primary-color: var(--paper-pink-600);
+				--default-primary-color: var(--paper-amber-600);
+				--default-primary-color: var(--paper-orange-500);
+				--default-primary-color: var(--paper-blue-500);
+				--default-primary-color: var(--paper-light-blue-500);
+				--default-primary-color: var(--paper-indigo-500);
+				--default-primary-color: var(--paper-pink-500);
+				--default-primary-color: var(--paper-deep-orange-500);
+				--default-primary-color: var(--paper-deep-orange-a400);
+				--default-primary-color: var(--paper-deep-purple-900);
+				--default-primary-color: var(--paper-deep-purple-800);
+				--default-primary-color: var(--paper-teal-500);
+				--default-primary-color: var(--paper-deep-purple-500);
+				--default-primary-color: var(--paper-indigo-a400);
+				--default-primary-color: var(--paper-yellow-a200); /*color:black;opacity:0.54;* /
+				--default-primary-color: var(--paper-indigo-a700);
+				--default-primary-color: var(--paper-deep-purple-a700);
+				--default-primary-color: var(--paper-deep-purple-a400);
+				https://www.google.com/design/spec/style/color.html#color-color-palette
+				--default-primary-color: var(--paper-deep-purple-600);
+				--default-primary-color: var(--paper-blue-a700);
+				Bootrap theme: themegarden: tempo
+				--default-primary-color: #f1c40f; /* #1c424d #5b777f #f3ca27 #f1c40f * /
+				--light-primary-color: #5b777f;
+				End: tempo
+				--default-primary-color: var(--paper-blue-a400);
+				*/
+				--default-primary-color: var(--paper-blue-a700);
+				--dark-primary-color: var(--paper-grey-900);
+				--light-primary-color: var(--paper-grey-700); /* Paper drawer panel background */
+				--text-primary-color: white; /*text/icons*/
+				--primary-background-color: #c5cae9; /* var(--paper-indigo-700) */
+				--primary-text-color: #212121; /* var(--paper-grey-900) */
+				--secondary-text-color: #727272; /* grey; but use black, opacity:0.54 instead */
+				--disabled-text-color: #bdbdbd; /* var(--paper-grey-900) */
+				--divider-color: #B6B6B6;
+				--accent-color: var(--paper-pink-a400);
+				/*
+				--accent-color: var(--paper-pink-500);
+				--accent-color: var(--paper-red-a400);
+				--accent-color: var(--paper-deep-orange-a400);
+				--accent-color: var(--paper-light-green-a400);
+				--accent-color: var(--paper-brown-500);
+				--accent-color: var(--paper-purple-a400);
+				--accent-color: var(--paper-yellow-a200);
+				--accent-color: var(--paper-light-blue-500);
+				--accent-color: var(--paper-amber-500);
+				--accent-color: var(--paper-indigo-a700);
+				--accent-color: var(--paper-indigo-a400);
+				--accent-color: var(--paper-teal-500);
+				--accent-color: var(--paper-yellow-500);
+				*/
 
-  :root {
-		/ *
-    --dark-primary-color: var(--paper-grey-900);
-    --default-primary-color: var(--paper-grey-800);
-    --light-primary-color: var(--paper-grey-700);
-    --text-primary-color: #ffffff; /*text/icons*/
-    --accent-color: var(--paper-light-blue-500);
-    --primary-background-color: #c5cae9;
-    --primary-text-color: #212121;
-    --secondary-text-color: #727272;
-    --disabled-text-color: #bdbdbd;
-    --divider-color: #B6B6B6;
-		*/
-		
-		
-		/* Default PSK theme
-    --dark-primary-color: #303F9F;
-    --default-primary-color: #3F51B5;
-    --light-primary-color: #C5CAE9;
-    --text-primary-color: #ffffff; /*text/icons*  /
-    --accent-color: #FF4081;
-    --primary-background-color: #c5cae9;
-    --primary-text-color: #212121;
-    --secondary-text-color: #727272;
-    --disabled-text-color: #bdbdbd;
-    --divider-color: #B6B6B6;
-		*/
 
-		/* Palette generated by Material Palette - materialpalette.com/deep-purple/pink * /
-		--dark-primary-color: #512DA8;
-	  --default-primary-color: #673AB7;
-		/*
-	  --default-primary-color: #FF4081;
-		* /
-		--light-primary-color: #D1C4E9;
-		--text-primary-color: #FFFFFF;
-		--accent-color: #FFC107;
-		/*
-		--accent-color: #9E9E9E;
-		--accent-color: #FF4081;
-		* /
-		--primary-text-color: #212121;
-		--secondary-text-color: #727272;
-		--divider-color: #B6B6B6;*/
+				/* Default PSK theme
+				--dark-primary-color: #303F9F; /* var(--paper-indigo-700)* /
+				--default-primary-color: #3F51B5;
+				--light-primary-color: #C5CAE9; /* var(--paper-indigo-100)* /
+				--text-primary-color: #ffffff; /*text/icons*  /
+				--accent-color: #FF4081; /* var(--paper-pink-A200)* /
+				--primary-background-color: #c5cae9; /* var(--paper-indigo-100)* /
+				--primary-text-color: #212121; /* var(--paper-grey-900) * /
+				--secondary-text-color: #727272; /* grey; but use black, opacity:0.54 instead * /
+				--disabled-text-color: #bdbdbd; /* var(--paper-grey-400) * /
+				--divider-color: #B6B6B6;
+				*/
 
-    /* Components */
+				/* Palette generated by Material Palette - materialpalette.com/deep-purple/pink * /
+				--dark-primary-color: #512DA8;
+				--default-primary-color: #673AB7;
+				/*
+				--default-primary-color: #FF4081;
+				* /
+				--light-primary-color: #D1C4E9;
+				--text-primary-color: #FFFFFF;
+				--accent-color: #FFC107;
+				/*
+				--accent-color: #9E9E9E;
+				--accent-color: #FF4081;
+				* /
+				--primary-text-color: #212121;
+				--secondary-text-color: #727272;
+				--divider-color: #B6B6B6;*/
 
-    /* paper-drawer-panel */
-		--paper-drawer-panel-left-drawer-container: {
-			background-color: var(--drawer-menu-color);
-		};
-    /*
-		--drawer-menu-color: #ffffff;
-		*/
-    --drawer-menu-color: var(--light-primary-color);
-    --drawer-border-color: 1px solid #ccc;
-    --drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
+				/* Components */
 
-    /* paper-menu */
-		/*
-		--paper-menu-background-color: #fff;
-		*/
-		--paper-menu-background-color: var(--light-primary-color);
-		--menu-link-color: #111111;
-  }
+				/* paper-drawer-panel */
+				--paper-drawer-panel-left-drawer-container: {
+					background-color: var(--drawer-menu-color);
+					color: white;
+				};
+				/*
+				--drawer-menu-color: #ffffff;
+				*/
+				--drawer-menu-color: var(--light-primary-color);
+				--drawer-border-color: 1px solid #ccc;
+				--drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
+				
+				/* paper-menu */
+				/*
+				--paper-menu-background-color: #fff;
+				*/
+				--paper-menu-background-color: var(--light-primary-color);
+				--menu-link-color: #111111;
+			}
 
-  /* General styles */
+			/* General styles */
 
-  #drawerToolbar {
-    color: white
-    background: var(--drawer-menu-color);
-		/*			
-    color: var(--secondary-text-color);
-    background-color: var(--accent-color);
-		*/
-    border-bottom: var(--drawer-toolbar-border-color);
-    height: 64px;
-  }
+				/*			
+			#drawerToolbar {
+				color: white
+				background: var(--drawer-menu-color);
+				color: var(--secondary-text-color);
+				background-color: var(--accent-color);
+				border-bottom: var(--drawer-toolbar-border-color);
+				height: 64px;
+			}
+				*/
 
-  paper-material {
-    border-radius: 2px;
-    height: 100%;
-    padding: 16px 0 16px 0;
-    width: calc(98.66% - 16px);
-    margin: 16px auto;
-    background: white;
-  }
+			paper-material {
+				border-radius: 2px;
+				height: 100%;
+				padding: 16px 0 16px 0;
+				width: calc(98.66% - 16px);
+				margin: 16px auto;
+				background: white;
+			}
 
-  paper-menu iron-icon {
-    margin-right: 33px;
-    opacity: 0.54;
-  }
+			#mainToolbar .middle {
+				margin-left: 48px;
+			}
 
-  .paper-menu > .iron-selected {
-    /*
-		color: var(--default-primary-color);
-		*/
-  }
+			#mainToolbar.has-shadow .middle {
+				font-size: 20px;
+				padding-bottom: 0;
+				margin-left: 48px;
+			}
 
-  paper-menu a {
-    text-decoration: none;
-  	border-bottom: 1px solid var(--paper-grey-600);
-		/*
-		color: var(--menu-link-color);
-		*/
-		color: white;
-		display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -ms-flex-direction: row;
-    -webkit-flex-direction: row;
-    flex-direction: row;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center;
-    font-family: 'Roboto', 'Noto', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 24px;
-    min-height: 48px;
-    padding: 0 16px;
-  }
-	
-  #mainToolbar .middle {
-    margin-left: 48px;
-  }
+			/* Height of the scroll area */
+			.content {
+				height: 900px;
+			}
 
-  #mainToolbar.has-shadow .middle {
-    font-size: 20px;
-    padding-bottom: 0;
-    margin-left: 48px;
-  }
+			/* Breakpoints */
 
-  /* Height of the scroll area */
-  .content {
-    height: 900px;
-  }
+			/* Small */
+			@media (max-width: 600px) {
 
-  /* Breakpoints */
+				paper-material {
+					--menu-container-display: none;
+					width: calc(97.33% - 32px);
+					padding-left: 16px;
+					padding-right: 16px;
+				}
 
-  /* Small */
-  @media (max-width: 600px) {
+				.paper-font-display1 {
+					font-size: 12px;
+				}
 
-    paper-material {
-      --menu-container-display: none;
-      width: calc(97.33% - 32px);
-      padding-left: 16px;
-      padding-right: 16px;
-    }
+				.app-name {
+					font-size: 26px;
+				}
 
-    .paper-font-display1 {
-      font-size: 12px;
-    }
+				#drawer .paper-toolbar {
+					margin-left: 16px;
+				}
 
-    .app-name {
-      font-size: 26px;
-    }
+				#overlay {
+					min-width: 360px;
+				}
 
-    #drawer .paper-toolbar {
-      margin-left: 16px;
-    }
+				.bg {
+					background: white;
+				}
 
-    #overlay {
-      min-width: 360px;
-    }
+			}
 
-    .bg {
-      background: white;
-    }
+			/* Tablet+ */
+			@media (min-width: 601px) {
 
-  }
+				paper-material {
+					width: calc(98% - 46px);
+					margin-bottom: 32px;
+					padding-left: 30px;
+					padding-right: 30px;
+				}
 
-  /* Tablet+ */
-  @media (min-width: 601px) {
+				#drawer.paper-drawer-panel > [drawer] {
+					border-right: 1px solid rgba(0, 0, 0, 0.14);
+				}
 
-    paper-material {
-      width: calc(98% - 46px);
-      margin-bottom: 32px;
-      padding-left: 30px;
-      padding-right: 30px;
-    }
+				iron-pages {
+					padding: 48px 62px;
+				}
 
-    #drawer.paper-drawer-panel > [drawer] {
-      border-right: 1px solid rgba(0, 0, 0, 0.14);
-    }
+			}
 
-    iron-pages {
-      padding: 48px 62px;
-    }
+			/* Material Design Adaptive Breakpoints */
+			/*
+				Below you'll find CSS media queries based on the breakpoint guidance
+				published by the Material Design team. You can choose to use, customise
+				or remove these breakpoints based on your needs.
 
-  }
+				http://www.google.com/design/spec/layout/adaptive-ui.html#adaptive-ui-breakpoints
+			 */
 
-  /* Material Design Adaptive Breakpoints */
-  /*
-    Below you'll find CSS media queries based on the breakpoint guidance
-    published by the Material Design team. You can choose to use, customise
-    or remove these breakpoints based on your needs.
+			/* mobile-small */
+			@media all and (min-width: 0) and (max-width: 360px) and (orientation: portrait) { }
+			/* mobile-large */
+			@media all and (min-width: 361px) and (orientation: portrait) { }
+			/* mobile-small-landscape */
+			@media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
+			/* mobile-large-landscape */
+			@media all and (min-width: 481px) and (orientation: landscape) { }
+			/* tablet-small-landscape */
+			@media all and (min-width: 600px) and (max-width: 960px) and (orientation: landscape) { }
+			/* tablet-large-landscape */
+			@media all and (min-width: 961px) and (orientation: landscape) { }
+			/* tablet-small */
+			@media all and (min-width: 600px) and (orientation: portrait) { }
+			/* tablet-large */
+			@media all and (min-width: 601px) and (max-width: 840px) and (orientation : portrait) { }
+			/* desktop-x-small-landscape */
+			@media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
+			/* desktop-x-small */
+			@media all and (min-width: 0) and (max-width: 480px) and (max-aspect-ratio: 4/3) { }
+			/* desktop-small-landscape */
+			@media all and (min-width: 481px) and (max-width: 840px) and (orientation: landscape) { }
+			/* desktop-small */
+			@media all and (min-width: 481px) and (max-width: 840px) and (max-aspect-ratio: 4/3) { }
+			/* desktop-medium-landscape */
+			@media all and (min-width: 841px) and (max-width: 1280px) and (orientation: landscape) { }
+			/* desktop-medium */
+			@media all and (min-width: 841px) and (max-width: 1280px) and (max-aspect-ratio: 4/3) { }
+			/* desktop-large */
+			@media all and (min-width: 1281px) and (max-width: 1600px) { }
+			/* desktop-xlarge */
+			@media all and (min-width: 1601px) and (max-width: 1920px) { }
 
-    http://www.google.com/design/spec/layout/adaptive-ui.html#adaptive-ui-breakpoints
-   */
+			/* Add custom styles */
+			
+			paper-toolbar paper-button {
+				--paper-button: {
+					@apply(--layout-vertical);
+					@apply(--layout-center-center);
+				};
+				xbackground: var(--default-primary-color);
+				color: white;
+				height: 100%;
+				border-radius: 0;      
+				border-left: 1px solid var(--paper-grey-600);
+				margin: 0;
+			}
 
-  /* mobile-small */
-  @media all and (min-width: 0) and (max-width: 360px) and (orientation: portrait) { }
-  /* mobile-large */
-  @media all and (min-width: 361px) and (orientation: portrait) { }
-  /* mobile-small-landscape */
-  @media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
-  /* mobile-large-landscape */
-  @media all and (min-width: 481px) and (orientation: landscape) { }
-  /* tablet-small-landscape */
-  @media all and (min-width: 600px) and (max-width: 960px) and (orientation: landscape) { }
-  /* tablet-large-landscape */
-  @media all and (min-width: 961px) and (orientation: landscape) { }
-  /* tablet-small */
-  @media all and (min-width: 600px) and (orientation: portrait) { }
-  /* tablet-large */
-  @media all and (min-width: 601px) and (max-width: 840px) and (orientation : portrait) { }
-  /* desktop-x-small-landscape */
-  @media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
-  /* desktop-x-small */
-  @media all and (min-width: 0) and (max-width: 480px) and (max-aspect-ratio: 4/3) { }
-  /* desktop-small-landscape */
-  @media all and (min-width: 481px) and (max-width: 840px) and (orientation: landscape) { }
-  /* desktop-small */
-  @media all and (min-width: 481px) and (max-width: 840px) and (max-aspect-ratio: 4/3) { }
-  /* desktop-medium-landscape */
-  @media all and (min-width: 841px) and (max-width: 1280px) and (orientation: landscape) { }
-  /* desktop-medium */
-  @media all and (min-width: 841px) and (max-width: 1280px) and (max-aspect-ratio: 4/3) { }
-  /* desktop-large */
-  @media all and (min-width: 1281px) and (max-width: 1600px) { }
-  /* desktop-xlarge */
-  @media all and (min-width: 1601px) and (max-width: 1920px) { }
+			paper-toolbar *:last-child {
+				margin-right: -16px;
+			}
 
-	/* Add custom styles */
-	
-	paper-toolbar paper-button {
-		--paper-button: {
-			@apply(--layout-vertical);
-			@apply(--layout-center-center);
-		};
-		xbackground:var(--default-primary-color);
-		color:white;
-		height:100%;
-		border-radius:0;      
-		border-left: 1px solid var(--paper-grey-600);
-		margin:0;
-	}
-	
-	paper-toolbar *:last-child {
-		margin-right: -16px;
-	}
+			.hover-button:hover {
+				color: black;
+				font-weight: bold;
+				background: white;
+			}
+						
+			/* End add style */
 
-	.hover-button:hover {
-		color: black;
-		font-weight: bold;
-  	background: white;
-	}
-	 
-  paper-menu a:first-child {
-		margin-top: -7px;
-	}
-	
-	paper-menu a:hover {
-		color: black;
-		font-weight: bold;
-		background: white;
-	}
-	
-	paper-menu a {
-		-o-transition      : .5s;
-		-ms-transition     : .5s;
-		-moz-transition    : .5s;
-		-webkit-transition : .5s;
-		transition         : .5s;
-	}
-	
-  /* End add style */
-
-</style>
+		</style>
+  </template>
+</dom-module>

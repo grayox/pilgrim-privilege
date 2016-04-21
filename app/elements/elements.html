@@ -10,6 +10,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
+<!-- App Layout elements -->
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+
+<!-- Firebase elements -->
+<link rel="import" href="../../bower_components/firebase-element/firebase-auth.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -->
+<link rel="import" href="../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="../../bower_components/firebase-element/firebase-document.html">
+
 <!-- Iron elements -->
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
@@ -18,9 +26,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <!-- Added -->
-<link rel="import" href="../../bower_components/firebase-element/firebase-auth.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -->
-<link rel="import" href="../../bower_components/firebase-element/firebase-document.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -->
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../bower_components/iron-icons/av-icons.html">
@@ -29,6 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
 <!--
 <link rel="import" href="../../bower_components/iron-meta/iron-meta.html">
@@ -53,10 +59,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
 <link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <!--<link rel="import" href="../../bower_components/paper-dropdown/paper-dropdown.html">--><!--Vulcanize error-->
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <!--<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">--><!--Vulcanize error-->
 <!-- To be replaced in 1.0
@@ -86,15 +94,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- Add your elements here -->
 <link rel="import" href="../styles/app-theme.html">
 	<!-- Added -->
-<link rel="import" href="my-argenta-data/my-argenta-data.html">
-<link rel="import" href="my-argenta-form/my-argenta-form.html">
-<link rel="import" href="my-argenta-image/my-argenta-image.html">
-<link rel="import" href="my-argenta-result/my-argenta-result.html">
-<link rel="import" href="my-argenta-view/my-argenta-view.html">
-<link rel="import" href="my-argenta-scatter/my-argenta-scatter.html">
-<link rel="import" href="my-toolbar-login/my-toolbar-login.html">
-
-
+<link rel="import" href="my-argenta/my-argenta-form.html">
+<link rel="import" href="my-argenta/my-argenta-history.html">
+<link rel="import" href="my-argenta/my-argenta-home.html">
+<link rel="import" href="my-argenta/my-argenta-image.html">
+<link rel="import" href="my-argenta/my-argenta-result.html">
+<link rel="import" href="my-argenta/my-argenta-scatter.html">
+<link rel="import" href="my-templates/my-data-auth.html">
+<link rel="import" href="my-templates/my-data-fetch.html">
+<link rel="import" href="my-templates/my-data-save.html">
+<link rel="import" href="my-templates/my-data-settings.html">
+<link rel="import" href="my-templates/my-view-header.html">
+<link rel="import" href="my-templates/my-view-main.html">
+<link rel="import" href="my-templates/my-view-menu.html">
+<link rel="import" href="my-templates/my-view-pages.html">
 
 <!-- Third-party elements -->
 

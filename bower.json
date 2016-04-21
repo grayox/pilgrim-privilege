@@ -10,7 +10,13 @@
     "paper-card": "PolymerElements/paper-card#~1.0.6",
     "google-chart": "GoogleWebComponents/google-chart#~1.0.3",
     "firebase-element": "GoogleWebComponents/firebase-element#~1.0.6",
-    "paper-menu-button": "PolymerElements/paper-menu-button#~1.0.3"
+    "paper-menu-button": "PolymerElements/paper-menu-button#~1.0.3",
+    "paper-tooltip": "PolymerElements/paper-tooltip#~1.1.1",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#~1.0.11",
+    "paper-behaviors": "PolymerElements/paper-behaviors#~1.0.9",
+    "iron-list": "PolymerElements/iron-list#~1.1.6",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#~1.1.0",
+    "app-layout": "PolymerLabs/app-layout#~0.0.5"
   },
   "devDependencies": {
     "web-component-tester": "*",

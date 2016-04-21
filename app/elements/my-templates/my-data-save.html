@@ -1,0 +1,103 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="../../../bower_components/iron-localstorage/iron-localstorage.html">
+
+<dom-module id="my-data-save">
+
+  <template>
+
+    <style>
+    </style>
+
+		<!--
+		<firebase-collection xorder-by-child="height"
+												 xlimit-to-first="3"
+												 location="https://torrid-heat-2303.firebaseio.com/dex/categories"
+												 data="{{categories}}"
+		></firebase-collection>
+    <firebase-collection location="{{userLocation}}"
+                         data="{{fbTodos}}"
+                         on-firebase-value="_firebaseLoaded"
+		></firebase-collection>
+		-- >
+		<firebase-document location="{{userSettingsLocation}}"
+											 data="{{categoriesDoc}}"
+											 >
+		</firebase-document>
+		<firebase-collection xorder-by-child="height"
+												 xlimit-to-first="3"
+												 location="{{userLocation}}"
+												 data="{{fbItems}}"
+                         on-firebase-value="_firebaseLoaded"
+		></firebase-collection>
+    -->
+    <!-- Backfill todos from localstorage. This prevents an initial flash while
+         we're waiting to hear from Firebase, and it lets the user see their
+         old todos if they start the app offline.
+         This SHOULD NOT write to Firebase. If the user has cleared their
+         localstorage, it should not nullify everything saved in Firebase. -->
+		<!--
+    <iron-localstorage name="auth"
+                       on-iron-localstorage-load="_backupLoaded"
+                       value="{{backupItems}}"
+											 >
+    </iron-localstorage>
+    <iron-localstorage name="user"
+                       value="{{user}}"
+											 >
+    </iron-localstorage>
+		-->
+  </template>
+  <script>
+		(function(){
+			//'use strict';
+			Polymer({
+				is: 'my-data-save',
+				properties: {
+					items: {
+						notify: true
+					},
+					user: {
+						observer: '_userChanged'
+					},
+					_firebaseConnected: {
+						value: false
+					}
+				},
+				// Setup user ref in firebase if auth succeeds
+				_userChanged: function(user) {
+					if (user) {
+						this.userLocation = [this.location, 'users', this.user.uid].join('/');
+						this.userSettingsLocation = [this.userLocation, 'settings'].join('/');
+						//console.log(this.userLocation); // https://blazing-torch-612.firebaseio.com/users/google:118249381882896358195
+						//console.log(this.userSettingsLocation);
+					}
+				},
+				_firebaseLoaded: function() {
+					this._firebaseConnected = true;
+					//console.log('Firebase Connected');
+					//console.log(this.user);
+					//console.log(this.userSettingsLocation);
+					this.items = this.fbItems;
+					this.backupItems = this.fbItems;
+					this.linkPaths('fbItems', 'items');
+					this.linkPaths('backupItems', 'items');
+				},
+				_backupLoaded: function() {
+					if (!this._firebaseConnected) {
+						this.todos = this.backupTodos.slice();
+					}
+				}
+			});
+		})();
+  </script>
+</dom-module>

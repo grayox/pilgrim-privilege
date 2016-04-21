@@ -1,0 +1,11 @@
+{
+	"public": "dist",
+  "firebase": "blazing-torch-612",
+	"rules": "app/security-rules.json",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**",
+		"app/browsers/**"
+  ]
+}

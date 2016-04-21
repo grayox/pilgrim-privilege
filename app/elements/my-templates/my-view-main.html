@@ -1,0 +1,264 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../my-argenta/my-argenta-form.html">
+<link rel="import" href="../my-argenta/my-argenta-history.html">
+<link rel="import" href="../my-argenta/my-argenta-home.html">
+<link rel="import" href="../my-argenta/my-argenta-image.html">
+<link rel="import" href="../my-argenta/my-argenta-result.html">
+<link rel="import" href="../my-argenta/my-argenta-scatter.html">
+<link rel="import" href="../my-templates/my-data-auth.html">
+<link rel="import" href="../my-templates/my-data-fetch.html">
+<link rel="import" href="../my-templates/my-data-save.html">
+<link rel="import" href="../my-templates/my-data-settings.html">
+<link rel="import" href="../my-templates/my-view-header.html">
+<link rel="import" href="../my-templates/my-view-menu.html">
+<link rel="import" href="../my-templates/my-view-pages.html">
+
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="../../styles/app-theme.html">
+<link rel="import" href="../../styles/app.css">
+
+<dom-module id="my-view-main">	
+		
+	<template>
+		
+		<style is="custom-style" include="app-theme"></style>
+		<iron-ajax id="ajax" verbose auto method="POST" xurl="" xbody=""></iron-ajax>
+		<iron-ajax id="manifest" xauto verbose
+							 url="../../manifest.json"
+							 handle-as="json"
+							 last-response="{{manifest}}"
+							 on-error="_handleErrorManifest"
+							 on-response="_handleResponseManifest"
+							 debounce-duration="300">
+		</iron-ajax>
+		<iron-ajax id="config" xauto verbose
+							 url="../../config.json"
+							 handle-as="json"
+							 last-response="{{config}}"
+							 on-error="_handleErrorConfig"
+							 on-response="_handleResponseConfig"
+							 debounce-duration="300">
+		</iron-ajax>
+		<firebase-collection id="fbc"
+												 xorder-by-child="timestamp"
+												 xorder-by-child="address"
+												 xorder-by-child="autoEst"
+												 xorder-by-child="{{sortVal}}"
+												 xlimit-to-first="3"
+												 xlocation="https://dinosaur-facts.firebaseio.com/dinosaurs"
+												 location="[[app.fb.logs]]"
+												 xdata="{{items}}"
+												 data="{{logItems}}"
+												 xon-firebase-value="_firebaseLoaded"><!-- See my-argenta-history.html-->
+		</firebase-collection>
+		<paper-drawer-panel id="drawerPanel" class="flex">
+			<paper-header-panel drawer>
+				<paper-toolbar id="drawerToolbar" class="paper-font-title">
+					<img id="icon" src="../../images/touch/icon-128.png" height="50" title="[[app.meta.desc]]">
+					<!--<paper-tooltip for="icon"><span>[[app.desc]]</span></paper-tooltip>-->
+				</paper-toolbar>
+				<div>
+					<!--
+					<paper-button on-tap="_printState">Print State</paper-button>
+					-->
+					<my-view-header app=[[app]]></my-view-header>
+					<my-view-menu route="{{route}}" on-select-item="_onMenuSelect"></my-view-menu><!--Var-->
+				</div>
+			</paper-header-panel>
+			<paper-header-panel main class="flex" mode="standard" xmode="seamed standard waterfall waterfall-tall scroll cover">
+				<paper-toolbar>
+					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+					<div class="xmiddle paper-font-display1 app-name">[[app.meta.name]]</div>
+					<span class="flex"></span>
+					<my-data-auth id="auth"
+												u="{{app.auth}}"
+												app="{{app}}"
+												on-x-login="_handleLogin"
+												on-x-logout="_handleLogout">
+					</my-data-auth>
+				</paper-toolbar>
+				<div class="content fit">
+					<my-view-pages id="pages" app="{{app}}" route="{{route}}"></my-view-pages><!--Var-->
+				</div>
+			</paper-header-panel>
+		</paper-drawer-panel>
+	
+	</template>
+
+	<script>
+		(function(){
+      //'use strict';
+			Polymer({
+				is: 'my-view-main',
+				properties: {
+
+					app: {
+						type: Object,
+						notify: true,
+						value: function () {
+							return {};
+						}
+					}
+					
+				},
+				
+				listeners: {
+					'log-history': '_logHistory'
+				},
+				_printState: function() {
+					console.log(this.app);
+				},
+				/*
+				*/
+				ready: function() {
+					this._handleSettings();
+				},
+				
+				attached: function() {
+					this.$.manifest.generateRequest();
+					this.$.config.generateRequest();
+				},
+				
+				_handleSettings: function() {
+					this._resetApp();
+				},
+				
+				_handleResponseManifest: function() {
+					this._resetApp();
+				},
+				
+				_handleResponseConfig: function() {
+					this._resetApp();
+				},
+				
+				_handleErrorManifest: function() {
+					this.$.manifest.generateRequest();
+				},
+
+				_handleErrorConfig: function() {
+					this.$.config.generateRequest();
+				},
+				
+				_resetApp: function(/*callback*/) {
+					this.async(function() { // To access sibling elements per https://www.polymer-project.org/1.0/docs/devguide/registering-elements.html#initialization-order
+						if(typeof this.manifest !== 'object'){
+							return;
+						}
+						if(typeof this.config !== 'object'){
+							return;
+						}
+					//this.set('app.meta'        , {}                                                             );
+						this.set('app.meta'        , this.config                                                    );
+            this.set('app.meta.fbID'   , this._setBlanks(this.app.meta.fbID, 'app')                     );
+					//this.set('app.meta.name'   , this.name                                                      );
+					  this.set('app.meta.name'   , this.manifest.name                                             );
+					//this.set('app.meta.desc'   , this.desc                                                      );
+					  this.set('app.meta.desc'   , this.manifest.description                                      );
+						this.set('app.fb'          , {}                                                             );
+					//this.set('app.fb.id'       , this.fbID.app                                                  );
+					  this.set('app.fb.id'       , this.app.meta.fbID.app                                         );
+					//this.set('app.fb.url'      , 'https://' + this.fbID.app  + '.firebaseio.com'                );
+					  this.set('app.fb.url'      , 'https://' + this.app.meta.fbID.app  + '.firebaseio.com'       );
+					//this.set('app.fb.login'    , 'https://' + this.fbID.auth + '.firebaseio.com'                );
+						this.set('app.fb.login'    , 'https://' + this.app.meta.fbID.auth + '.firebaseio.com'       );
+						try{
+							this.set('app.fb.user'   , [ this.app.fb.url  , 'users'    , this.app.auth.uid ].join('/'));//'.json');
+						}catch(e){
+							this.set('app.fb.user'   , ''                                                             );
+						}
+						this.set('app.fb.logs'     , [ this.app.fb.user , 'logs'                         ].join('/'));
+						this.set('app.fb.settings' , [ this.app.fb.user , 'settings'                     ].join('/'));
+						this.set('app.fb.history'  , [ this.app.fb.user , 'history'                      ].join('/'));
+					  console.log(this.app);
+					});
+					/*
+					if(typeof callback == 'function'){
+						callback(); // Force synchronous execution // Reference: http://stackoverflow.com/a/1859229/1640892
+					}
+					*/
+				},
+				
+				_setBlanks: function(ob, str) { // Sets blank string properties of ob to value of ob[str]
+					var x, out = {};
+					for (x in ob) {
+						out[x] = ( typeof ob[x] === 'string' && !ob[x].length ) ? ob[str] : ob[x];
+					}
+					return out;
+				},
+							
+				_handleLogin: function() {
+					this._resetApp();
+					//this._logCentral('login'); // Report auth login event to central and local data stores
+					this.set('app.meta.signedIn', true);
+				},
+				
+				_handleLogout: function() {
+					//this._logCentral('logout'); // Report auth logout event to central and local data stores
+					//this.$.pages.$.history.$.fbc.disconnect();
+					this.ready();
+					this.attached();
+					//this.app.set('settings', {});
+					this.$.pages.$.settings.set('settings', {});
+					this.$.pages.$.history.set('fbItems', {});
+				},
+							
+				_logHistory: function(e) {
+					var data = e.detail,
+							d = new Date(e.timeStamp);
+					data.timestamp = e.timeStamp;
+					data.date = d.toDateString();
+					this.$.pages.$.history.$.fbc.add(data);
+				},
+				/*
+				_logLocal: function() { // Local authorization log
+					//console.log(this.app.fb); // undefined
+					var body = this.app.auth;
+					body.timestamp = new Date().getTime();
+					this.set('$.ajax.url'  , this.app.fb.auth);
+					this.set('$.ajax.body' , JSON.stringify(body));
+				},
+				/*
+				_logCentral: function(logType) { // Central authorization log
+					//console.log(this.app.fb); // fb.logs is good but fb.auth is undefined
+					this.set('$.ajax.url'  , this.app.fb.logs);
+					this.set('$.ajax.body' , JSON.stringify({
+																	   timestamp: new Date().getTime(),
+	     															 logtype: logType,
+			     													 uid: this.app.auth.uid,
+					     											 appName: this.app.meta.name
+							     							   }));
+				},
+				*/
+				// Close drawer after menu item is selected if drawerPanel is narrow
+				_onMenuSelect: function() {
+					if (this.$.drawerPanel.narrow) {
+						this.$.drawerPanel.closeDrawer();
+					}
+				}
+		
+			});
+		})();
+	</script>
+	
+</dom-module>

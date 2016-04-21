@@ -8,6 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/iron-form/iron-form.html">
@@ -23,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	
 		<style>
 			paper-card {
-				height: 100vh;
+				xheight: 100vh;
 			}
 			code {
 				color: #007000;
@@ -66,7 +67,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				filter: blur(5px);
 			}
 			paper-button:hover,
-			paper-icon-button:hover
+			paper-icon-button:hover,
 			.primary-button:hover
 			{
 				xbackground: white;
@@ -164,94 +165,103 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		<iron-localstorage
 			name="my-auth-toolbar"
 			value="{{u}}"
-			xon-iron-localstorage-load-empty="initializeDefaultCartoon"
-  	></iron-localstorage><!-- Write to local storage to maintain user login when screen refreshes -->
+			xon-iron-localstorage-load-empty="initializeDefaultCartoon">
+    </iron-localstorage><!-- Write to local storage to maintain user login when screen refreshes -->
 		<div class="xfit layout vertical">
 			<paper-card heading="Estimate Home Value" xclass="pink">
 				<div class="card-content">
 					<paper-fab id="fab"
 										 icon="send"
 										 on-tap="_formSubmit"
-										 disabled
-					></paper-fab>
+										 disabled>
+					</paper-fab>
 					<paper-input value="{{addy::input}}"
 											 id="input"
 											 label="Enter Address"
-					></paper-input>
+											 on-keydown="_checkEnter">
+					</paper-input>
 				</div>
 				<div class="card-actions layout horizontal center-justified">
 					<paper-button id="reset"
 												on-tap="_formReset"
-												disabled
-					>Reset</paper-button>
+												disabled>Reset
+					</paper-button>
 				</div>
 			</paper-card>
 		</div>
   </template>
-</dom-module>
 
-<script>
-	(function(){	// 5008 corson ave s, seattle, wa // 12420 SE 223rd Drive, Kent, WA 98031
-		Polymer({
-			is: 'my-argenta-form',
-			behaviors: [
-				Polymer.NeonAnimatableBehavior,
-				Polymer.IronFormElementBehavior,
-				Polymer.IronValidatableBehavior
-			],
-			properties: {
-				/*
-				animationConfig: {
-					value: {
-						entry: {
-							name: "slide-from-left-animation",
-							node: this
-						},
-						exit: {
-							name: "fade-out-animation",
-							node: this							
+	<script>
+		(function(){
+			//'use strict';
+			Polymer({
+				is: 'my-argenta-form',
+				behaviors: [
+					Polymer.NeonAnimatableBehavior,
+					Polymer.IronFormElementBehavior,
+					Polymer.IronValidatableBehavior
+				],
+				properties: {
+					/*
+					animationConfig: {
+						value: {
+							entry: {
+								name: "slide-from-left-animation",
+								node: this
+							},
+							exit: {
+								name: "fade-out-animation",
+								node: this							
+							}
 						}
+					},
+					*/
+					addy: {
+						type: String,
+						notify: true,
+						observer: '_addyChanged'
 					}
 				},
-				*/
-				addy: {
-					type: String,
-					notify: true,
-					observer: '_observeAddyChanges'
+				// Listen for ENTER key
+				_checkEnter: function(e) {
+					if (e.keyCode === 13) {
+						this._formSubmit();
+					}
 				},
-				addyUrl: String
-			},
-			/*
-			listeners: {
-				'input': '_onInput'
-			},
-			_onInput: function() {
-				this.addy = this.$.input.value;
-			},
-			*/
-			// Overidden from Polymer.IronValidatableBehavior. Will set the `invalid`
-			// attribute automatically, which should be used for styling.
-			_getValidity: function() {
-				return this.value != '';
-			},
-			_formReset: function() {
-				this.fire("my-form-reset");
-			},
-			_formSubmit: function() {
-				this.fire("my-form-submit");
-			},
-			_observeAddyChanges: function() {
-				this._computeTitleCase();
-				this._handleButtonsEnabled();
-			},
-			_computeTitleCase: function() {
-				this.addy = this.addy.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-			},
-			_handleButtonsEnabled: function() {
-				this.$.fab.disabled = !this.addy.length;
-				this.$.reset.disabled = !this.addy.length;
-				this.fire("my-form-wipe-error");
-			}
-		});
-	})();
-</script>
+				/*
+				listeners: {
+					'input': '_onInput'
+				},
+				_onInput: function() {
+					this.addy = this.$.input.value;
+				},
+				*/
+				// Overidden from Polymer.IronValidatableBehavior. Will set the `invalid`
+				// attribute automatically, which should be used for styling.
+				_getValidity: function() {
+					return this.value !== '';
+				},
+				_formReset: function() {
+					this.fire('my-form-reset');
+				},
+				_formSubmit: function() {
+					//console.log(this.addy);
+					this.fire('my-form-submit');
+				},
+				_addyChanged: function() {
+					this._computeTitleCase();
+					this._handleButtonsEnabled();
+				},
+				_computeTitleCase: function() {
+					this.addy = this.addy.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+				},
+				_handleButtonsEnabled: function() {
+					this.$.fab.disabled = !this.addy.length;
+					this.$.reset.disabled = !this.addy.length;
+					this.fire('my-form-wipe-error');
+				}
+			});
+		})();
+	</script>
+	
+</dom-module>

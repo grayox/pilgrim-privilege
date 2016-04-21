@@ -16,48 +16,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // client-side router inspired by the Express router
     // More info: https://visionmedia.github.io/page.js/
 		
-    page('/', function () {
-      app.route = 'page01';
-    });
-
-    page('/page02', function () {
-      app.route = 'page02';
-    });
-
-    page('/page03', function (data) {
-      app.route = 'page03';
-      app.params = data.params;
-    });
-
-    page('/page03', function () {
-      app.route = 'page04';
-    });
-		
-    page('/page05', function (data) {
-      app.route = 'page05';
-      app.params = data.params;
-    });
-
-    page('/page06', function () {
-      app.route = 'page06';
-    });
-
-    page('/page06/:name', function (data) {
-      app.route = 'page06-info';
-      app.params = data.params;
-    });
-
+    page('/'      ,function(){app.route='page01';});
+    page('/page02',function(){app.route='page02';});
+    page('/page03',function(){app.route='page03';});
+    page('/page04',function(){app.route='page04';});
+    page('/page05',function(){app.route='page05';});
+    page('/page06',function(){app.route='page06';});
     page('/page07',function(){app.route='page07';});
     page('/page08',function(){app.route='page08';});
     page('/page09',function(){app.route='page09';});
     page('/page10',function(){app.route='page10';});
     page('/page11',function(){app.route='page11';});
     page('/page12',function(){app.route='page12';});
+    page('/page13',function(){app.route='page13';});
+    page('/page14',function(){app.route='page14';});
+    page('/page15',function(){app.route='page15';});
+    page('/page16',function(){app.route='page16';});
+    page('/page17',function(){app.route='page17';});
+    page('/page18',function(){app.route='page18';});
+    page('/page19',function(){app.route='page19';});
+    page('/page20',function(){app.route='page20';});
+    page('/page21',function(){app.route='page21';});
+    page('/page22',function(){app.route='page22';});
+    page('/page23',function(){app.route='page23';});
+    page('/page24',function(){app.route='page24';});
+    page('/page25',function(){app.route='page25';});
 		
     // add #! before urls
     page({
       hashbang: true
     });
+			
+		/*
+    page('/page03', function (data) {
+      app.route = 'page03';
+      //app.params = data.params;
+    });
+    page('/page06/:name', function (data) {
+      app.route = 'page06-info';
+      app.params = data.params;
+    });
+		*/
+		
 		/*
 		<more-routing-config driver="hash"></more-routing-config>
 		<more-route name="home"          path="/"             ></more-route>

@@ -1,0 +1,297 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+
+<dom-module id="my-data-issues">
+		
+  <template>
+
+		<style>
+			:host {
+				display: block;
+			}
+			paper-card {
+				width: 100%;
+				xheight: 100vh;
+				max-width: 400px;
+				margin: 48px auto 16px;
+				@apply(--layout-vertical);
+				@apply(--center-justified);
+			}
+			.color {
+				color: var(--accent-color)
+			}
+      .item:hover {
+        xbackground-color: var(--paper-grey-100);
+        background-color: var(--paper-grey-300);
+      }
+			.item {
+				transition         : .5s;
+				-o-transition      : .5s;
+				-ms-transition     : .5s;
+				-moz-transition    : .5s;
+				-webkit-transition : .5s;
+			}
+			.full-image {
+				/*width: 100vw;*/
+				width: 100%;
+			}
+	    paper-dropdown-menu {
+				text-align: left;
+				margin: auto;
+				width: 120px;
+				color: white;
+    	}
+			paper-menu {
+				background-color: white;
+			}
+			paper-input {
+				color: white;
+			}
+		</style>
+		
+    <style>
+			
+			:host {
+        @apply(--layout-fit);
+        @apply(--layout-vertical);
+        x@apply(--paper-font-common-base);
+        xbackground-color: var(--paper-grey-200, #eee);
+				--avatar-size: 70px;
+				--padding-width: 16px;
+      }
+      paper-toolbar {
+        xbackground: var(--paper-green-700);
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        font-weight: bold;
+        z-index: 1;
+      }
+      paper-toolbar paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+      iron-list {
+        padding-top: 1px;
+        padding-bottom: 16px;
+        -webkit-flex: 1 1;
+        flex: 1 1;
+        --iron-list-items-container: {
+          max-width: 800px;
+          margin: auto;
+          margin-top: 60px;
+          margin-bottom: 60px;
+          border-bottom: 1px solid #ddd;
+	      };
+      }
+      .item {
+        @apply(--layout-horizontal);
+        padding: 20px;
+        background-color: white;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+			/*
+			.row {
+        @apply(--layout-horizontal);
+			}
+			*/
+      .item:focus {
+        outline: 0;
+        border-color: #666;
+      }
+      .avatar {
+        height: var(--avatar-size);
+        width: var(--avatar-size);
+        border-radius: 50%;
+        box-sizing: border-box;
+        background-color: #DDD;
+      }
+      .pad {
+        /*padding: 0 16px;*/
+				padding: 0 var(--padding-width);
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+      }
+      .primary {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .shortText, .longText {
+        font-size: 14px;
+      }
+      .longText {
+        color: gray;
+        xopacity: 0.54;
+        display: none;
+      }
+			/*
+      .item:hover .shortText::after {
+        content: ' [+]';
+        color: gray;
+      }
+			*/
+      .item:hover .primary::after {
+        content: ' [+]';
+        xcolor: gray;
+        opacity: 0.54;
+        font-size: 14px;
+        font-weight: normal;
+      }
+			/*
+			.item.expanded:hover .shortText::after {
+        content: '';
+      }
+			*/
+			.item.expanded:hover .primary::after {
+        content: ' [—]';
+      }
+      .item.expanded .longText {
+        display: block;
+      }
+			/*
+      .item.expanded:hover .longText::after {
+        content: ' [–]';
+      }
+      */
+			
+      @media (max-width: 460px) {
+        paper-toolbar .bottom.title {
+          font-size: 14px;
+        }
+      }
+    </style>
+		
+		<firebase-collection id="fbc"
+												 xorder-by-child="timestamp"
+												 xorder-by-child="address"
+												 xorder-by-child="autoEst"
+												 order-by-child="{{sortby}}"
+												 xlimit-to-first="3"
+												 location="https://dinosaur-facts.firebaseio.com/dinosaurs"
+												 xlocation="[[app.fb.history]]"
+												 data="{{items}}">
+		</firebase-collection>
+		
+		<paper-card heading="Issues">
+			<div class="card-content layout vertical" hidden$="[[app.meta.signedIn]]">
+				<p>Login to add an issue.</p>
+			</div>
+		</paper-card>
+
+		<paper-toolbar hidden$="[[!app.meta.signedIn]]">
+			<!--
+			<paper-icon-button icon="arrow-back" alt="Back"></paper-icon-button>
+			<div class="flex"></div>
+			<paper-icon-button icon="search" alt="Search"></paper-icon-button>
+			<paper-icon-button icon="more-vert" alt="More options"></paper-icon-button>
+			<div class="bottom title">Sort and Filter</div>
+			-->
+			<paper-input id="search" class="short" label="Search">
+				<iron-icon icon="search" prefix></iron-icon>
+				<paper-icon-button suffix on-tap="_clearInput"
+						icon="clear" alt="clear" title="clear" tabindex="0">
+				</paper-icon-button>
+			</paper-input>
+			<paper-dropdown-menu label="Sort by">
+				<paper-menu class="dropdown-content" xselected="1"
+										selected="{{sortby}}" attr-for-selected="data-sortby">
+					<paper-item data-sortby="all"    >All    </paper-item>
+					<paper-item data-sortby="open"   >Open   </paper-item>
+					<paper-item data-sortby="closed" >Closed </paper-item>
+				</paper-menu>
+			</paper-dropdown-menu>
+		</paper-toolbar>
+		<span>[[sortby]]</span>
+
+		<iron-list id="list" items="[[items]]" as="item" class="flex xfit">
+			<template xis="dom-repeat" xitems="[[items]]" xsort="_sortItems(items)">
+				<div class="item" class$="[[getClassForItem(item, item.expanded)]]"
+						 on-tap="_collapseExpand" xtabindex="0">
+					<img class="avatar" src="[[item.image]]">
+					<div class="pad">
+						<!--<div class="primary">[[item.__firebaseKey__]]</div>-->
+						<div class="primary">[[item.address]]</div>
+						<div class="shortText">[[item.display]]<br>[[item.date]]</div>
+						<iron-icon icon="expand-more" hidden$="[[item.expanded]]"></iron-icon>
+						<iron-icon icon="expand-less" hidden$="[[!item.expanded]]"></iron-icon>
+						<div class="longText"><img src="[[item.image]]" class="full-image"></div>
+					</div>
+					<iron-icon icon$="[[iconForItem(item)]]"></iron-icon>
+				</div>
+			</template>
+		</iron-list>
+		
+  </template>
+	
+	<script>
+	(function() {
+		//'use strict';
+		Polymer({
+			is: 'my-data-issues',
+			properties: {
+				items: {
+					type: Array
+				},
+				sortby: {
+					type: String,
+					value: 'timestamp'
+				}
+			},
+			observers: [
+				'signedInChanged(app.meta.signedIn)',
+				'_sortItems(items)'
+			],
+			_collapseExpand: function(e) {
+				var list = this.$.list;
+				var index = e.model.index;
+				var isExpanded = list.items[index].expanded;
+				list.set('items.' + index + '.expanded', !isExpanded);
+				list.updateSizeForItem(e.model.index);
+			},
+			iconForItem: function(/*item*/) {
+				//return item ? (item.integer < 50 ? 'star-border' : 'star') : '';
+				return 'star-border';
+			},
+			getClassForItem: function(item, expanded) {
+				if (typeof expanded === 'undefined') {
+					expanded = false;
+				}
+				return expanded ? 'item expanded' : 'item';
+			},
+			/*
+			_sortItems: function(a, b) {
+				return b.timestamp - a.timestamp;
+			},
+			*/
+			_sortItems: function(arr) {
+				arr.reverse();
+				//this.items.reverse();
+			},
+			signedInChanged: function(signedIn) {
+				if(!signedIn){
+					this.$.fbc.disconnect();
+				}
+			}
+		});
+	})();
+	</script>
+	
+</dom-module>

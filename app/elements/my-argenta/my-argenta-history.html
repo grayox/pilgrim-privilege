@@ -1,0 +1,555 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="../../../bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<dom-module id="my-argenta-history">
+		
+  <template xis="dom-bind">
+
+		<style>
+			:host {
+				display: block;
+			}
+			paper-card {
+				width: 100%;
+				xheight: 100vh;
+				max-width: 400px;
+				margin: 48px auto 16px;
+				@apply(--layout-vertical);
+				@apply(--center-justified);
+			}
+			.color {
+				color: var(--accent-color)
+			}
+      .item:hover {
+        xbackground-color: var(--paper-grey-100);
+        background-color: var(--paper-grey-300);
+      }
+			.item {
+				transition         : .5s;
+				-o-transition      : .5s;
+				-ms-transition     : .5s;
+				-moz-transition    : .5s;
+				-webkit-transition : .5s;
+			}
+			.full-image {
+				/*width: 100vw;*/
+				width: 100%;
+			}
+	    paper-dropdown-menu {
+				text-align: left;
+				margin: auto;
+				width: 120px;
+				--paper-menu-button-dropdown-background: white;
+				--paper-dropdown-menu-icon: {
+					color: white;
+				}
+    	}
+			paper-menu {
+				background-color: white;
+			}
+			paper-input, paper-dropdown-menu { /* https://elements.polymer-project.org/elements/paper-input?active=paper-input-container */
+				xcolor: white;
+				--paper-input-container-input-color: white;
+				--paper-input-container-color: white;
+				@apply(--layout-self-end);
+				@apply(--layout-around-justify);
+			}
+			paper-toggle-button {
+				--paper-toggle-button-label-color: white;
+				font-weight: 100;
+				xopacity: 54%;
+			}
+		</style>
+		
+    <style>
+			
+			:host {
+        @apply(--layout-fit);
+        @apply(--layout-vertical);
+        x@apply(--paper-font-common-base);
+        xbackground-color: var(--paper-grey-200, #eee);
+				--avatar-size: 70px;
+				--padding-width: 16px;
+      }
+      paper-toolbar {
+        xbackground: var(--paper-green-700);
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        font-weight: bold;
+        z-index: 1;
+      }
+      paper-toolbar paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+			.list-container {
+				height: 100vh;
+			}
+      iron-list {
+				margin: 0px;
+				height: 100%;
+				xwidth: 100%;
+        padding-top: 1px;
+        padding-bottom: 16px;
+        -webkit-flex: 1 1;
+        flex: 1 1;
+        --iron-list-items-container: {
+					height: 100vh;
+          max-width: 800px;
+          margin: 20px auto;
+          xmargin-top: 60px;
+          xmargin-bottom: 60px;
+					xmargin: 0px 26px 10px 4px;
+					xmargin: 0px;
+          border-bottom: 1px solid #ddd;
+	      };
+      }
+			/*
+      .item { /* New (simple) * /
+        @apply(--layout-horizontal);
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin: 16px 16px 0 16px;
+        border-radius: 8px;
+       }
+			/*/
+      .item { /* Original (expanded) */
+        xborder-radius: 8px;
+        @apply(--layout-horizontal);
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+			.row {
+        @apply(--layout-horizontal);
+			}
+			*/
+      .item:focus {
+        outline: 0;
+        border-color: #666;
+      }
+      .avatar {
+        height: var(--avatar-size);
+        width: var(--avatar-size);
+        border-radius: 50%;
+        box-sizing: border-box;
+        background-color: #DDD;
+      }
+      .pad {
+        /*padding: 0 16px;*/
+				padding: 0 var(--padding-width);
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+      }
+      .primary {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .shortText, .longText {
+        font-size: 14px;
+      }
+      .longText {
+        color: gray;
+        xopacity: 0.54;
+        display: none;
+      }
+			/*
+      .item:hover .shortText::after {
+        content: ' [+]';
+        color: gray;
+      }
+			*/
+      .item:hover .primary::after {
+        content: ' [+]';
+        xcolor: gray;
+        opacity: 0.54;
+        font-size: 14px;
+        font-weight: normal;
+      }
+			/*
+			.item.expanded:hover .shortText::after {
+        content: '';
+      }
+			*/
+			.item.expanded:hover .primary::after {
+        content: ' [—]';
+      }
+      .item.expanded .longText {
+        display: block;
+      }
+			/*
+      .item.expanded:hover .longText::after {
+        content: ' [–]';
+      }
+      */
+			
+      @media (max-width: 460px) {
+        paper-toolbar .bottom.title {
+          font-size: 14px;
+        }
+      }
+    </style>
+		
+		<firebase-collection id="fbc"
+												 xorder-by-child="timestamp"
+												 xorder-by-child="address"
+												 xorder-by-child="autoEst"
+												 xorder-by-child="{{sortVal}}"
+												 xlimit-to-first="3"
+												 xlocation="https://dinosaur-facts.firebaseio.com/dinosaurs"
+												 location="[[app.fb.history]]"
+												 xdata="{{items}}"
+												 data="{{fbItems}}"
+												 on-firebase-value="_firebaseLoaded">
+		</firebase-collection>
+    <!-- Reference: https://github.com/PolymerLabs/todo-list/blob/master/app/elements/todo-data/todo-data.html
+				 Backfill todos from localstorage. This prevents an initial flash while
+         we're waiting to hear from Firebase, and it lets the user see their
+         old todos if they start the app offline.
+         This SHOULD NOT write to Firebase. If the user has cleared their
+         localstorage, it should not nullify everything saved in Firebase. -->
+    <iron-localstorage name="history"
+                       on-iron-localstorage-load="_backupLoaded"
+                       value="{{backupItems}}">
+    </iron-localstorage>
+		
+		<paper-card heading="History">
+			<div class="card-content layout vertical" hidden$="[[app.meta.signedIn]]">
+				<p>To view your history, login and check "Save history" in your user settings.</p>
+			</div>
+		</paper-card>
+		
+		<paper-toolbar hidden$="[[!app.meta.signedIn]]">
+			<!--
+			<paper-icon-button icon="arrow-back" alt="Back"></paper-icon-button>
+			<div class="flex"></div>
+			<paper-icon-button icon="search" alt="Search"></paper-icon-button>
+			<paper-icon-button icon="more-vert" alt="More options"></paper-icon-button>
+			<div class="bottom title">Sort and Filter</div>
+			-->
+			<div class="flex"></div>
+			<paper-input id="search" class="short" label="Search"
+									 value="{{searchStr::input}}">
+				<iron-icon icon="search" prefix></iron-icon>
+				<paper-icon-button suffix on-tap="_clearInput"
+						icon="clear" alt="clear" title="clear" tabindex="0">
+				</paper-icon-button>
+			</paper-input>
+			<div class="flex"></div>
+			<paper-dropdown-menu label="Sort by">
+				<paper-menu class="dropdown-content" xselected="1"
+										selected="{{sortVal}}" attr-for-selected="data-sortby">
+					<paper-item data-sortby="address"  >Address</paper-item>
+					<paper-item data-sortby="timestamp">Date   </paper-item>
+					<paper-item data-sortby="autoEst"  >Value  </paper-item>
+				</paper-menu>
+			</paper-dropdown-menu>
+      <paper-toggle-button checked="{{reverse}}" disabled$="[[disabled]]">
+				Reverse
+			</paper-toggle-button>
+			<div class="flex"></div>
+		</paper-toolbar>
+    <!---- >
+			items:     <span>[[items]]</span>
+			fbItems:   <span>[[fbItems]]</span>
+			searchStr: <span>[[searchStr]]</span>
+			sortVal:   <span>[[sortVal]]</span>
+			reverse:   <span>[[reverse]]</span>
+			sortOrder: <span>[[sortOrder]]</span>
+    <!---->
+
+		<div class="list-container" hidden$="[[!app.meta.signedIn]]">
+			<iron-list id="list"
+								 items="[[items]]"
+								 as="item"
+								 class="flex xfit">
+			<!-- Bring back <iron-list> after this issue is fixed: https://github.com/PolymerElements/iron-list/issues/123 -->
+				<!--
+				<template is="dom-repeat" id="list" items="[[items]]" xas="item"
+									filter="{{_computeFilter(searchStr)}}" sort="{{_computeSort(sortVal, sortOrder)}}">
+				<!-- Dom-bind examples: https://www.polymer-project.org/1.0/docs/devguide/templates.html#dom-repeat
+																http://plnkr.co/edit/RmVFjFQmY1hDbdpXVWHt?p=preview
+																http://plnkr.co/edit/jinsrUiNIzR4qprBH6Yr?p=preview 
+										not working http://plnkr.co/edit/Xe9pPPhl5zjQG9xwBgh4?p=preview 
+								 clone of above http://jsbin.com/zoqaqivaba/edit?html,output
+																http://plnkr.co/edit/dOGzZ0f5sATogevIyudW?p=preview
+																http://jsbin.com/lokopogili/edit?html,output
+								 clone of above http://jsbin.com/hesonicono/edit?html,output
+
+						 Iron-list sort:    http://stackoverflow.com/a/34027546/1640892
+																http://jsbin.com/mabadi/2/edit?html,output // Original sorting solution per @arthur
+																http://jsbin.com/tipifaqive/edit?html,output
+								 clone of above http://jsbin.com/vizexodoyi/edit?html,output
+
+						 Iron-list filter:  http://jsbin.com/luyomozeyo/edit?html,output // Filter tutorial
+								 clone of above http://jsbin.com/romeqepalu/edit?html,output
+
+             Bug report:        http://jsbin.com/saxewimowu/edit?html,output
+								 clone of above http://jsbin.com/punuwagaxi/edit?html,output
+
+             Bug solution:      http://jsbin.com/xewizuzata/edit?html,output
+								 clone of above http://jsbin.com/pufalegofe/edit?html,output
+				-->
+				<template>
+					<div class="item" class$="[[getClassForItem(item, item.expanded)]]"
+							 on-tap="_collapseExpand" xtabindex="0">
+						<img class="avatar" src="[[item.image]]">
+						<div class="pad">
+							<!--<div class="primary">[[item.__firebaseKey__]]</div>-->
+							<div class="primary">[[item.address]]</div>
+							<div class="shortText">[[item.display]]<br>[[item.date]]</div>
+							<iron-icon icon="expand-more" hidden$="[[item.expanded]]"></iron-icon>
+							<iron-icon icon="expand-less" hidden$="[[!item.expanded]]"></iron-icon>
+							<div class="longText"><img src="[[item.image]]" class="full-image"></div>
+						</div>
+						<!--
+						<iron-icon icon$="[[iconForItem(item)]]"></iron-icon>
+						-->
+						<div>
+							<paper-icon-button xsuffix on-tap="_animatePageRight"
+								icon="arrow-forward" xnoink title="Detail" alt="Detail" tabindex="0">
+							</paper-icon-button>
+						</div>
+					</div>
+				</template>
+			</iron-list>
+		</div>
+		
+  </template>
+	
+	<script>
+	(function() {
+		//'use strict';
+		Polymer({
+			is: 'my-argenta-history',
+			properties: {
+				items: {
+					type: Array
+				},
+				searchStr: {
+					type: String,
+					value: ''// Breaks it
+				},
+				sortOrder: {
+					type: Number,
+					value: 1, // Low to high
+					computed: '_computeSortOrder(reverse)'
+				},
+				sortVal: {
+					type: String,
+					value: 'timestamp'
+				},
+				disabled: {
+					type: Boolean,
+					value: true,
+					computed: '_computeDisabled(sortVal)'
+				},
+				reverse: {
+					type: Boolean,
+					value: true
+				},
+				_firebaseConnected: {
+					type: Boolean,
+          value: false
+        }
+			},
+			attached: function() {
+				//this.set('reverse', false);
+				//this.set('items', this.fbItems);
+			},
+			observers: [
+				'_signedInChanged(app.meta.signedIn)',
+				//'sortChanged(sortVal, sortOrder)',
+				//'filterChanged(searchStr)'
+				'filterOrSortChanged(searchStr, sortVal, sortOrder)'
+			],
+			_firebaseLoaded: function() {
+				// Reference: https://github.com/PolymerLabs/todo-list/blob/master/app/elements/todo-data/todo-data.html
+        this._firebaseConnected = true;
+				/*
+        this.items = this.fbItems;
+        this.backupItems = this.fbItems;
+        this.linkPaths('fbItems', 'items');
+        this.linkPaths('backupItems', 'items');
+				*/
+				this.set('items', this.fbItems);
+				this.set('backupItems', this.fbItems);
+				this.set('sortOrder', -1);
+      },
+      _backupLoaded: function() {
+        if (!this._firebaseConnected) {
+          this.items = this.backupItems.slice();
+        }
+      },
+			_collapseExpand: function(e) {
+				var list = this.$.list;
+			  var index = e.model.index;
+			//var index = this.items.indexOf(item);
+				var isExpanded = list.items[index].expanded;
+				list.set('items.' + index + '.expanded', !isExpanded);
+				list.updateSizeForItem(index);//list.updateSizeForItem(e.model.index);
+			},
+			iconForItem: function(/*item*/) {
+				//return item ? (item.integer < 50 ? 'star-border' : 'star') : '';
+				return 'star-border';
+			},
+			getClassForItem: function(item, expanded) {
+				if (typeof expanded === 'undefined') {
+					expanded = false;
+				}
+				return expanded ? 'item expanded' : 'item';
+			},
+			_signedInChanged: function(signedIn) {
+				if(!signedIn){
+					this.$.fbc.disconnect();
+				}
+			},
+			nodes2arr: function(nodes) {
+				// Reference for below: http://stackoverflow.com/questions/3199588/fastest-way-to-convert-javascript-nodelist-to-array
+        //var temp = Array.prototype.slice.call(this.items);
+				// nodes = nodes || this.items;
+        if (! this.items || this.items.length === 0) {
+          return;
+        }
+				var out = [], i = nodes.length;
+				while(i--) {
+					out[i] = nodes[i]; //temp.unshift(this.items[i]);
+				}
+				return out;
+			},
+			filterOrSortChanged(str, val, ord) {
+        if (! this.items || this.items.length === 0) {
+          return;
+        }
+				this.set('items', this.fbItems);
+				var arr = this.nodes2arr(this.items);
+				if(str && (str.length > 0) ) {
+					arr = arr.filter(this._computeFilter(str));
+				}
+				if(this.items && (this.items.length > 0) ){
+					arr.sort(this._computeSort(val, ord));
+				}
+				this.set('items', arr);
+			},
+			/*
+			sortChanged(val, ord) {
+				this.set('items', this.fbItems);
+        if (! this.items || this.items.length == 0) {
+          return;
+        }
+				var temp = this.nodes2arr(this.items);
+        temp.sort(this._computeSort(val, ord));
+				this.set('items', temp); //this.items = temp;
+        //console.log('ord: ' + ord);
+        //console.log('val: ' + val);
+        //console.log('items: ' + this.items);
+			},
+			filterChanged(str){
+				this.set('items', this.fbItems);
+				if (! str || str.length === 0) {
+          return;
+        }
+				var arr = this.nodes2arr(this.items);
+        /*function isBigEnough(element, index, array) {
+					return (element >= 10);
+				}
+				* /
+        var temp = arr.filter(this._computeFilter(str));
+				this.set('items', temp);
+				/* http://jsbin.com/romeqepalu/edit?html,output
+				var myArray3 = ["Sam", "Mark", "Sam", "Tim", "Sam"];
+				var result3 = myArray3.filter(function(value,index,array){return array.indexOf(value) === index;});
+				document.write(result3 + "<br><br>");
+				* /
+			},*/
+			_clearInput: function() {
+				this.set('searchStr', ''); //this.searchStr = '';
+			},
+			_computeSortOrder: function(bool) {
+				return bool ? 1 : -1;
+			},
+			_computeDisabled: function(str) {
+				if (typeof str !== 'string') {
+					return true;
+				} else {
+					return !str.length;
+				}
+			},
+      _computeFilter: function(str) {
+        if (!str) {
+          return null; // set filter to null to disable filtering
+        } else {
+          // return a filter function for the current search string
+          str = str.toLowerCase();
+          return function(item) {
+            var addy = item.address.toLowerCase();
+            //var arv  = item.autoEst.toLowerCase();
+            return (addy.indexOf(str) !== -1
+                  //|| arv.indexOf(str) !== -1
+									 );
+          };
+        }
+      },
+			_computeSort: function(val, ord) {
+				//console.log('val: ' + val + ', ord: ' + ord);
+				return function(a, b) {
+					if (a[val] === b[val]) {
+						return 0;
+					}
+					return (ord * (a[val] > b[val] ? 1 : -1) );
+				};
+			} 
+			/*
+			_computeSort: function(val) {
+			  // Example for Toggling Nested Sorting
+				// Reference: http://jcrowther.io/2015/06/09/polymer-dom-repeat-filtering-and-sorting/
+				switch(val) {
+					case 'name':
+						return function(a, b) {
+							if (a.name === b.name) return 0;
+							return a.name < b.name ? -1 : 1;
+						};
+					case 'email':
+						return function(a, b) {
+							if (a.email === b.email) return 0;
+							return a.email < b.email ? -1 : 1;
+						};
+					case 'email_provider':
+						var regex = /@(.*)/;
+						return function(a, b) {
+							var a_provider = a.email.match(regex)[1];
+							var b_provider = b.email.match(regex)[1];
+							if (a_provider == b_provider) {
+								if (a.email === b.email) return 0;
+								return a.email < b.email ? -1 : 1;
+							}
+							return a_provider < b_provider ? -1 : 1;
+						};
+				}
+			}
+			*/
+		});
+	})();
+	</script>
+	
+</dom-module>

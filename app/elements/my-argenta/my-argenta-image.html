@@ -19,7 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 			paper-card {
 				width: 100%;
-				height: 100vh;
+				xheight: 100vh;
 				max-width: 400px;
 				margin-bottom: 16px;
 				@apply(--layout-vertical);
@@ -29,41 +29,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 			.color {
 				color: var(--accent-color);
-			}		
+			}
+			h1 {
+				text-align: center;
+			}
 		</style>
 	
 		<paper-card heading="{{addy}}"
-								image="{{imageurl}}"
-		>
-			<h3 id="head" class$="{{headclass}}"><strong>{{heading}}</strong></h3>
+								xheading="Photo"
+								image="{{imageUrl}}">
+			<h1 id="head" class$="{{headclass}}"><strong>{{value}}</strong></h1>
 		</paper-card>
   </template>
 
 	<script>
 	(function() {
+		//'use strict';
 		Polymer({
 			is: 'my-argenta-image',
 			behaviors: [Polymer.NeonAnimatableBehavior],
 			properties: {
-				addy: String,
-				imageurl: String,
+				imageUrl: String,
 				estimate: String,
-				heading: {
+				addy: {
 					type: String,
-					value: "Photo",
-					computed: "_computeHeading(estimate)"
+					value: 'Photo',
+					observer: '_addyChanged'
+				},
+				value: {
+					type: String,
+					value: '',
+					computed: '_computeValue(estimate)'
 				},
 				headclass: {
 					type: String,
-					value: "",
-					computed: "_computeHeadColor(estimate)"
+					value: '',
+					computed: '_computeHeadColor(estimate)'
 				}
 			},
-			_computeHeading: function(e) {
-				return (e.length > 0) ? e : "Photo";
+			_addyChanged: function(e) {
+				return (e.length === 0) ? 'Photo' : e ;
+			},
+			_computeValue: function(e) {
+				return (e.length > 0) ? e : '' ;
 			},
 			_computeHeadColor: function(e) {
-				return (e.length > 0) ? "color" : "";
+				return (e.length > 0) ? 'color' : '' ;
 			}
 		});
 	})();

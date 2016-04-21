@@ -22,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 			paper-card {
 				width: 100%;
-				height: 100vh;
+				xheight: 100vh;
 				max-width: 400px;
 				margin-bottom: 16px;
 				@apply(--layout-vertical);
@@ -30,47 +30,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				margin-left: auto;
 				margin-right: auto;
 			}
+			paper-spinner {
+				--paper-spinner-layer-1-color: var(--accent-color);
+        --paper-spinner-layer-2-color: var(--accent-color);
+        --paper-spinner-layer-3-color: var(--accent-color);
+        --paper-spinner-layer-4-color: var(--accent-color);
+			}
 			.color {
 				color: var(--accent-color)
 			}
 		</style>
-		
+
 		<paper-card heading="After Repair Value Estimate">
 			<div class="card-content">
 				<h4>{{addy}}</h4>
-				<h1 class="color"><strong>{{estimate_display}}</strong></h1>
+				<h1 class="color"><strong>{{estimateDisplay}}</strong></h1>
 				<paper-spinner id="spinner" alt="Computing..."></paper-spinner>
 				<p id="error" hidden>
 					Verify address then
 					<paper-button on-tap="_handleReset">try again</paper-button>
 				</p>
 			</div>
+			<div id="reset" class="card-actions layout horizontal center-justified" hidden>
+				<paper-button on-tap="_handleAgain">Estimate another home value</paper-button>
+			</div>
 		</paper-card>
   </template>
 	
 	<script>
 	(function() {
+		//'use strict';
 		Polymer({
 			is: 'my-argenta-result',
-			behaviors: [Polymer.NeonAnimatableBehavior],
+			behaviors: [
+				Polymer.NeonAnimatableBehavior
+			],
 			properties: {
 				estimate: {
 					type: Number,
 					notify: true
 				},
-				estimate_display: {
+				estimateDisplay: {
 					type: String,
 					computed: '_computeEstimateDisplay(estimate)',
 					notify: true
 				}
 			},
 			_handleReset: function() {
-				this.fire("my-result-reset");
+				this.fire('my-result-reset');
 			},
-			_computeEstimateDisplay: function(num) {
-				return !num ? "" : num.toLocaleString('USD', {
+			_handleAgain: function() {
+				this.fire('my-result-again');
+			},
+			_computeEstimateDisplay: function(num) { // prettify
+				return !num ? '' : num.toLocaleString('USD', {
 					style: 'currency',
-					currency: "USD",
+					currency: 'USD',
 					minimumFractionDigits: 0,
 					maximumFractionDigits: 0
 				});

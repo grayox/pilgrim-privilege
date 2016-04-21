@@ -9,38 +9,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <!doctype html>
-<html lang="">
+<html lang="en">
 
 <head>
 	<meta charset="utf-8">
-  <meta name="description" content="">
+  <meta name="description" content="Automatic value estimates of residential real estate"><!-- Var -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="generator" content="Polymer Starter Kit" />
-  <title>Argenta</title>
+	<!-- Reference: https://www.polymer-project.org/0.5/articles/webview.html#oneapp
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+	-->
+  <!-- <meta name="generator" content="Polymer Starter Kit" /> -->
+  <title>Argenta</title><!-- Var -->
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
   <!-- Chrome for Android theme color -->
-  <meta name="theme-color" content="#303F9F">
+  <meta name="theme-color" content="#303F9F"><!-- Var -->
 
   <!-- Web Application Manifest -->
   <link rel="manifest" href="manifest.json">
 
   <!-- Tile color for Win8 -->
-  <meta name="msapplication-TileColor" content="#3372DF">
+  <meta name="msapplication-TileColor" content="#3372DF"><!-- Var -->
 
   <!-- Add to homescreen for Chrome on Android -->
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="Polymer Starter Kit">
-  <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+  <meta name="application-name" content="Argenta"><!-- Var -->
+  <!--
+	<link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+	-->
+  <link rel="icon" sizes="16x16" href="images/touch/icon-128.png">
 
   <!-- Add to homescreen for Safari on iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Polymer Starter Kit">
+  <meta name="apple-mobile-web-app-title" content="Argenta"><!-- Var -->
+	<!--
   <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
+	-->
+  <link rel="apple-touch-icon" href="images/touch/icon-128.png">
 
   <!-- Tile icon for Win8 (144x144) -->
+	<!--
   <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+	-->
+  <meta name="msapplication-TileImage" content="images/touch/icon-128.png">
 		
   <!-- build:css styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
@@ -57,6 +69,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- will be replaced with elements/elements.vulcanized.html -->
   <link rel="import" href="elements/elements.html" xasync>
   <!-- endreplace-->
+	
+  <!-- Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+	<!-- endFonts -->
 	
 	<!-- Theme from https://polymerthemes.com/ via $ bower install --save polymen-themes -- >
 	<link rel="import" href="bower_components/polymer-themes/golden-goose.html">
@@ -78,104 +94,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<script src="https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js"></script>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<!-- endmdl -->
+	<script src="/cordova.js" type="text/javascript"></script>
 	
 </head>
-
-<body xunresolved class="fullbleed layout vertical" xstyle="height:100vh">
+       	
+<body unresolved class="fullbleed layout vertical" xstyle="height:100vh">
 	<span id="browser-sync-binding"></span>
 	<template is="dom-bind" id="app">
-		<paper-drawer-panel class="flex" mode="seamed">
-			<paper-header-panel drawer mode="seamed">
-				<paper-toolbar id="drawerToolbar" class="paper-font-title">
-					<!--<img height="60"
-							 style="invert:100%;filter: brightnes(0) invert(100%);"
-							 xsrc="https://lh3.googleusercontent.com/-3bvnuTAbEFg/VhIq5mKZZaI/AAAAAAAAQRs/q24qcdT839c/s144-Ic42/spacecraft-logo-placeholder.png"
-							 src="http://placehold.it/50/50"
-					>-->
-					<iron-icon icon="hardware:security" xicon="image:blur-on" xicon="image:blur-linear"></iron-icon>
-				</paper-toolbar>
-				<div>
-					<span>{{u.displayName}}</span>
-					<paper-menu class="pagelist" attr-for-selected="data-route" selected="{{route}}" on-iron-select="onMenuSelect"><!-- Drawer Content -->
-						<a data-route="page01"><iron-icon icon="home"               ></iron-icon><span>Home       </span></a>
-						<a data-route="page02"><iron-icon icon="editor:insert-chart"></iron-icon><span>Chart      </span></a>
-						<a data-route="page03"><iron-icon icon="image:grid-on"      ></iron-icon><span>Table      </span></a>
-						<a data-route="page04"><iron-icon icon="maps:map"           ></iron-icon><span>Map        </span></a>
-						<a data-route="page05"><iron-icon icon="description"        ></iron-icon><span>Attributes </span></a>
-						<a data-route="page06"><iron-icon icon="book"               ></iron-icon><span>Facts      </span></a>
-						<a data-route="page07"><iron-icon icon="restore"            ></iron-icon><span>History    </span></a>
-						<a data-route="page08"><iron-icon icon="star"               ></iron-icon><span>Upgrade    </span></a>
-						<a data-route="page09"><iron-icon icon="social:share"       ></iron-icon><span>Export     </span></a>
-						<a data-route="page10"><iron-icon icon="view-module"        ></iron-icon><span>Batch      </span></a>
-						<a data-route="page11"><iron-icon icon="view-column"        ></iron-icon><span>Comps      </span></a>
-						<a data-route="page12"><iron-icon icon="account-balance"    ></iron-icon><span>Financing  </span></a>
-					</paper-menu>
-				</div>
-			</paper-header-panel>
-			<paper-header-panel main class="flex seamed">
-				<paper-toolbar>
-					<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
-					<div class="xmiddle paper-font-display1 app-name">
-						Argenta
-					</div>
-					<span class="flex"></span>
-					<!--<paper-button>
-						<iron-icon icon="av:videocam"></iron-icon>
-						<br>
-						Learn
-					</paper-button>-->
-					<my-toolbar-login></my-toolbar-login>
-				</paper-toolbar>
-				<div class="content fit">
-					<iron-pages attr-for-selected="data-route" selected="{{route}}">										          
-						<section data-route="page01">
-							<my-argenta-view></my-argenta-view>
-						</section>
-						<!--
-						<section data-route="page03">Page 02</section>
-						<section data-route="page03">Page 03</section>
-						<section data-route="page04">
-							<google-map style="height:600px" latitude="37.779" longitude="-122.3892" min-zoom="9" max-zoom="11" language="en">
-								<google-map-marker latitude="37.779" longitude="-122.3892"
-																	 title="Go Giants!" draggable="true">
-									<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/San_Francisco_Giants_Cap_Insignia.svg/200px-San_Francisco_Giants_Cap_Insignia.svg.png" />
-								</google-map-marker>
-							</google-map>
-						</section>
-						<section data-route="page05">Page 05</section>
-						<section data-route="page06">Page 06</section>
-						<section data-route="page07">Page 07</section>
-						<section data-route="page08">Page 08</section>
-						<section data-route="page09">Page 09</section>
-						<section data-route="page10">Page 10</section>
-						<section data-route="page11">Page 11</section>
-						<section data-route="page12">Page 12</section>
-						<section data-route="page13">Page 13</section>
-						-->
-					</iron-pages>
-				</div>
-			</paper-header-panel>
-		</paper-drawer-panel>
-
-    <paper-toast id="caching-complete"
-                 duration="6000"
+		<my-view-main></my-view-main>
+    <paper-toast id="caching-complete" duration="6000"
                  text="Caching complete! This app will work offline.">
     </paper-toast>
-
-    <platinum-sw-register auto-register
-                          clients-claim
-                          skip-waiting
+    <platinum-sw-register auto-register clients-claim skip-waiting
                           on-service-worker-installed="displayInstalledToast">
-      <platinum-sw-cache default-cache-strategy="networkFirst"
-                         precache-file="precache.json">
-      </platinum-sw-cache>
+      <platinum-sw-cache default-cache-strategy="networkFirst" 
+												 precache-file="precache.json">
+			</platinum-sw-cache>
     </platinum-sw-register>
-
   </template>
-
-  <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
-  <!-- endbuild-->
 </body>
 
 </html>

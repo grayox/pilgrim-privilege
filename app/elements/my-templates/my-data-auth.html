@@ -30,16 +30,15 @@
 <link rel="import" href="../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../bower_components/iron-signals/iron-signals.html">
 -->
-<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-menu-button/paper-menu-button.html">
-<!--
 <link rel="import" href="../../../bower_components/firebase-element/firebase-auth.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -->
-<link rel="import" href="../../../bower_components/firebase-element/firebase-document.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -- >
+<link rel="import" href="../../../bower_components/firebase-element/firebase-document.html"> <!-- v1.0.2 bower install --save GoogleWebComponents/firebase-element -->
+<!--
 <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../bower_components/google-signin/google-signin.html"> <!-- google-signin-aware.html comes bundled -- >
 <!--<link rel="import" href="../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">-->
@@ -48,11 +47,11 @@
 <!--
 http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-button
 -->
-<dom-module id="my-toolbar-login">
+<dom-module id="my-data-auth">
 	
 	<template>
 
-		<style>
+		<style is="custom-style" include="app-theme">
 			:host {
 				/*
 				display: block;
@@ -81,6 +80,9 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 				height: 100%;
 				xborder-left: 1px solid var(--paper-grey-600);
 			}
+			paper-menu > p {
+				text-align: center;
+			}
 			paper-menu-button {
 				margin: 0;
 				padding: 0;
@@ -100,19 +102,18 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 					@xapply(--layout-flex);
 				};
 				xbackground:var(--default-primary-color);
+				xheight: 100%;
 				color: white;
-				height: 100%;
 				border-radius: 0;
+				margin: 0;
 				/*
 				border-left: 1px solid var(--paper-grey-600);
 				*/
-				margin:0;
-				
+				transition         : .25s;
 				-o-transition      : .25s;
 				-ms-transition     : .25s;
 				-moz-transition    : .25s;
 				-webkit-transition : .25s;
-				transition         : .25s;
 			}
 			paper-button:hover {
 				background: white;
@@ -126,13 +127,13 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 				width: 20px;
 			}
 			paper-menu paper-item {
+				color: black;
+				background: white;
+				transition         : .5s;
 				-o-transition      : .5s;
 				-ms-transition     : .5s;
 				-moz-transition    : .5s;
 				-webkit-transition : .5s;
-				transition         : .5s;
-				color: black;
-				background: white;
 			}
 			/*
 			paper-menu paper-item:first-child {
@@ -161,12 +162,15 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
           /* width: 100%; */
         };
       }
+			.profile {
+				display: inline;
+				border-radius: 50%;
+			}
 		</style>
 		
-		<!-- Non-display imported elements -->
-	  	<!-- Firebase -->
     <firebase-auth id="firebaseLogin"
-									 location="{{firebaseUrl}}"
+									 location="{{app.fb.login}}"
+									 xlocation="{{firebaseUrl}}"
 									 user="{{user}}"
 									 status-known="{{statusKnown}}"
 									 provider="{{provider}}"
@@ -174,22 +178,13 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 									 on-user-created="_userSuccessHandler"
 									 on-password-changed="_userSuccessHandler"
 									 on-password-reset="_userSuccessHandler"
-									 on-user-removed="_userSuccessHandler"
-		></firebase-auth>
-    <firebase-document id="firebaseDocument"
-											 location="{{firebaseUrl}}"
-		></firebase-document>
-			<!-- End: Firebase -->
-	  	<!-- Iron -->
-		<iron-localstorage name="my-auth-toolbar"
+									 on-user-removed="_userSuccessHandler">
+		</firebase-auth>
+		<iron-localstorage name="auth"
+											 id="localstorage"
 											 value="{{u}}"
-											 xon-iron-localstorage-load-empty="initializeDefaultCartoon"
-  	></iron-localstorage><!-- Write to local storage to maintain user login when screen refreshes -->
-		<iron-ajax id="ajax"
-							 url="{{firebaseLog}}"
-							 verbose auto
-							 method="POST"
-		></iron-ajax>
+											 xon-iron-localstorage-load-empty="initializeDefaultCartoon">
+		</iron-localstorage>
 			<!-- End: Iron -->
 		<!-- End: Non-display -->
 		
@@ -209,22 +204,29 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 		</paper-menu-button>
 		-->
 		<paper-button	hidden$="{{_computeLoginHidden(statusKnown, user)}}"
-									on-tap="_openModal"
-			><iron-icon icon="exit-to-app"></iron-icon>
+									on-tap="_openModal">
+			<iron-icon icon="exit-to-app"></iron-icon>
 			<br>
 			Login
 		</paper-button>
 		<paper-dialog id="modal" modal>
+			<p>We never autopost.</p>
 			<paper-menu id="menu">
-				<paper-item on-tap="login" data-provider="google"   ><i class="fa fa-lg xfa-4x fa-fw fa-google           "></i>&nbsp;Login using Google     </paper-item>
-				<paper-item on-tap="login" data-provider="facebook" ><i class="fa fa-lg xfa-4x fa-fw fa-facebook-official"></i>&nbsp;Login using Facebook   </paper-item>
-				<paper-item on-tap="login" data-provider="google"   ><i class="fa fa-lg xfa-4x fa-fw fa-google-plus      "></i>&nbsp;Login using Google Plus</paper-item>
-				<paper-item on-tap="_closeModal"                    ><iron-icon icon="close"></iron-icon>                      &nbsp;Cancel login           </paper-item>
+				<paper-item on-tap="_login" data-provider="google"   ><i class="fa fa-lg xfa-4x fa-fw fa-google           "></i>&nbsp;Login using Google     </paper-item>
+				<paper-item on-tap="_login" data-provider="facebook" ><i class="fa fa-lg xfa-4x fa-fw fa-facebook-official"></i>&nbsp;Login using Facebook   </paper-item>
+				<paper-item on-tap="_login" data-provider="google"   ><i class="fa fa-lg xfa-4x fa-fw fa-google-plus      "></i>&nbsp;Login using Google Plus</paper-item>
+				<paper-item on-tap="_closeModal"                     ><iron-icon icon="close"></iron-icon>                      &nbsp;Cancel login           </paper-item>
 			</paper-menu>
     </paper-dialog>
+		<!--
+		<img hidden$="{{_computeLogoutHidden(statusKnown, user)}}"
+				 class="profile"
+         src="[[u.profileImageURL]]"
+				 height="50">
+		-->
 		<paper-button	hidden$="{{_computeLogoutHidden(statusKnown, user)}}"
-									on-tap="logout"
-			><iron-icon icon="exit-to-app"></iron-icon>
+									on-tap="_logout">
+			<iron-icon icon="exit-to-app"></iron-icon>
 			<br>
 			Logout
 		</paper-button>
@@ -232,8 +234,8 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 		<!--
 		<paper-menu-button hidden$="{{_computeLogoutHidden(statusKnown, user)}}">
 			<paper-button	class="dropdown-trigger"
-										xhidden$="{{_computeLogoutHidden(statusKnown, user)}}"
-										><iron-icon xicon="account-circle" icon="social:person"></iron-icon>
+										xhidden$="{{_computeLogoutHidden(statusKnown, user)}}">
+        <iron-icon xicon="account-circle" icon="social:person"></iron-icon>
 				<br>
 				<span>{{u.displayNameMod}}</span>
 				<!--
@@ -253,36 +255,23 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 
 	<script>
 		(function() {
+			//'use strict';
 			Polymer({
-				is: 'my-toolbar-login',
+				is: 'my-data-auth',
 
 				properties: {
-
-					firebase: {
-						type: String,
-						value: "torrid-heat-2303"
-					},
-
-					firebaseUrl: {
-						type: String,
-						// value: "https://torrid-heat-2303.firebaseio.com"
-						computed: '_computeFirebaseUrl(firebase)'
-					},
-
-					firebaseLog: {
-						type: String,
-						// value: "https://torrid-heat-2303.firebaseio.com/logs.json"
-						computed: '_computeFirebaseUrl(firebase, "logs")'
-					},
-
+					
 					u: {
 						// Normalized user object by combining info from
 						// https://www.firebase.com/docs/web/guide/login/{{provider}}.html
 						// where {{provider}} is any of ["google","facebook","twitter"]
 						type: Object,
 						notify: true
-						// value: {}
-						//computed: '_computeU(user)'
+					},
+					
+					app: {
+						type: Object,
+						notify: true
 					},
 
 					// Properties below this line came from: https://github.com/GoogleWebComponents/firebase-element/blob/master/demo/x-login.html // Replaces: https://github.com/HackITtoday/hi9-login/blob/master/hi9-login.html
@@ -316,9 +305,11 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 					}
 				},
 
-				login: function(e) { // Need event e to pass in 'data-provider' attribute
+				_login: function(e) { // Need event e to pass in 'data-provider' attribute
+					//console.log(e);
+					//console.log(this.app);
 					this._closeModal();
-					var params;
+				  var params;
 
 					try {
 						params = JSON.parse(this.params);
@@ -326,40 +317,49 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 						params = null;
 					}
 
-					if (this.provider == 'password') {
+					if (this.provider === 'password') {
 						params = params || {};
 						params.email = this.email;
 						params.password = this.password;
 					}
-
-					this.provider = Polymer.dom(e).rootTarget.getAttribute('data-provider');
+          this.provider = Polymer.dom(e).rootTarget.getAttribute('data-provider');
+					/*
+					console.log(this.app.fb.login);
+					console.log(this.user);
+					console.log(this.statusKnown);
+					console.log(this.provider);
+					*/
 					this.$.firebaseLogin.login(params);
-
+          //console.log(this.app);
 				},
 
-				logout: function() {
-					this.logReport("logout");
+				_logout: function() {
+					this.fire('x-logout');
 					this.$.firebaseLogin.logout();
-					this.set('u', null );
+				  //this.set('u', null );
+					this.set('u'   , {} );
+					this.set('app' , {} );
 				},
 
 				_errorHandler: function(e) {
-					this.message = 'Error: ' + e.detail.message;
+					//this.message = 'Error: ' + e.detail.message;
+					console.log(e);
 				},
 
 				_userSuccessHandler: function(e) {
-					this.message = e.type + ' success!';
+					//this.message = e.type + ' success!';
+					console.log(e);
 				},
 
-				_createUserHandler: function(e) {
+				_createUserHandler: function() { // function(e)
 					this.$.firebaseLogin.createUser(this.email, this.password);
 				},
 
-				_changePasswordHandler: function(e) {
+				_changePasswordHandler: function() { // function(e)
 					this.$.firebaseLogin.changePassword(this.email, this.password, this.newPassword);
 				},
 
-				_resetPasswordHandler: function(e) {
+				_resetPasswordHandler: function() { // function(e)
 					this.$.firebaseLogin.sendPasswordResetEmail(this.email);
 				},
 
@@ -407,21 +407,6 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 
 				// Methods above this line came from: https://github.com/GoogleWebComponents/firebase-element/blob/master/demo/x-login.html // Replaces:  https://github.com/HackITtoday/hi9-login/blob/master/hi9-login.html
 
-				_computeDisplayName(str) {
-					return str.replace("xyz","<br>")
-				},
-				
-				_computeFirebaseUrl: function(fb, path) {
-					// @param {String} fb Firebase name e.g., "torrid-heat-2303"
-					// @param {String} path Path to add e.g., "logs" or "logs/logins"
-					// @return {String} "https://torrid-heat-2303.firebaseio.com/logs.json"
-					var out = "https://" + fb + ".firebaseio.com";
-					if (path) {
-						out += "/" + path + ".json";
-					}
-					return out;
-				},
-
 				_userChanged: function() {
 					//          user  u
 					// Startup  null  null
@@ -432,58 +417,53 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 					// https://www.firebase.com/docs/web/guide/login/{{provider}}.html
 					// where {{provider}} is any of ["google","facebook","twitter"]
 					if (this.user) {
-								this.u                        = {}                                    ;
+								this.set('u'                  , {}                                   );
 								this.set('u.uid'              , this.user.uid                        ); // String | A unique user ID, intended as the user's unique key across all providers.
-								this.set('u.provider'         , this.user.provider                   
-																										.charAt(0).toUpperCase()            //          Capitalize first letter
-																							+ this.user.provider.slice(1)          ); // String | The authentication method used: "google", "facebook" or "twitter".
+								this.set('u.provider'         , this.user.provider.charAt(0).toUpperCase() + this.user.provider.slice(1)); // Capitalize first letter // String | The authentication method used: "google", "facebook" or "twitter".
 								this.set('u.token'            , this.user.token                      ); // String | The Firebase authentication token for this session.
 								this.set('u.auth'             , this.user.auth                       ); // Object | The contents of the authentication token, which will be available as the auth variable within your Security and Firebase Rules.
 								this.set('u.expires'          , this.user.expires                    ); // Number | A timestamp, in seconds since the UNIX epoch, indicating when the authentication token expires.
 						switch(this.u.provider) { // Use this.u.provider "Google","Facebook", etc, not this.provider "google","f..." // This maintains login status upon screen refresh.
-							case "Google":
+							case 'Google':
 								this.set('u.user'             , this.user.google                     ); // Object | An object containing provider-specific data.
 								this.set('u.id'               , this.user.google.id	                 ); // String | The Google user's ID.
 								this.set('u.accessToken'      , this.user.google.accessToken         ); // String | The Google OAuth 2.0 access token granted by Google during user authentication.
-								this.set('u.accessTokenSecret', ""                                   ); // String | Only Twitter provides this variable.
+								this.set('u.accessTokenSecret', ''                                   ); // String | Only Twitter provides this variable.
 								this.set('u.displayName'      , this.user.google.displayName         ); // String | The Google user's full name.
 								this.set('u.email'            , this.user.google.email               ); // String | The Google user's primary email address as listed on their profile. Returned only if a valid email address is available, and the Google email permission was granted by the user.
-								this.set('u.username'         , ""                                   ); // String | Only Twitter provides this variable.
+								this.set('u.username'         , ''                                   ); // String | Only Twitter provides this variable.
 								this.set('u.profileImageURL'  , this.user.google.profileImageURL     ); // String | The URL of the Google user's profile picture.
-								this.set('u.cachedUserProfile', this.user.google.cachedUserProfile   ); // Object | The Google user's raw profile, as specified by Google's user documentation. Note that the data included in this payload is generated by Google and may be changed by them at any time.
+								this.set('u.cachedUserProfile', this.user.google.cachedUserProfile   ); // Object | The Google user's raw profile, as specified by Google's user documentation. Note payload data is generated by Google and may be changed by them at any time.
 								break;
-							case "Facebook":
+							case 'Facebook':
 								this.set('u.user'             , this.user.facebook                   ); // Object | An object containing provider-specific data.
 								this.set('u.id'               , this.user.facebook.id                ); // String | The Facebook user's ID. This ID is unique to each Facebook application and cannot be used across different apps.
 								this.set('u.accessToken'      , this.user.facebook.accessToken       ); // String | The Facebook OAuth 2.0 access token granted by Facebook during user authentication.
-								this.set('u.accessTokenSecret', ""                                   ); // String | Only Twitter provides this variable.
+								this.set('u.accessTokenSecret', ''                                   ); // String | Only Twitter provides this variable.
 								this.set('u.displayName'      , this.user.facebook.displayName       ); // String | The Facebook user's full name.
 								this.set('u.email'            , this.user.facebook.email             ); // String | The Facebook user's primary email address as listed on their profile. Returned only if a valid email address is available, and the Facebook email permission was granted by the user.
-								this.set('u.username'         , ""                                   ); // String | Only Twitter provides this variable.
+								this.set('u.username'         , ''                                   ); // String | Only Twitter provides this variable.
 								this.set('u.profileImageURL'  , this.user.facebook.profileImageURL   ); // String | The URL of the Facebook user's profile picture.
-								this.set('u.cachedUserProfile', this.user.facebook.cachedUserProfile ); // Object | The Facebook user's raw profile, as specified by Facebook's user documentation. Note that the data included in this payload is generated by Facebook and may be changed by them at any time.
+								this.set('u.cachedUserProfile', this.user.facebook.cachedUserProfile ); // Object | The Facebook user's raw profile, as specified by Facebook's user documentation. Note payload data is generated by Facebook and may be changed by them at any time.
 								break;
-							case "Twitter":
+							case 'Twitter':
 								this.set('u.user'             , this.user.twitter                    ); // Object | An object containing provider-specific data.
 								this.set('u.id'               , this.user.twitter.id                 ); // String | The Twitter user's ID.
 								this.set('u.accessToken'      , this.user.twitter.accessToken        ); // String | The Twitter OAuth 1.0 access token granted by Twitter during user authentication.
 								this.set('u.accessTokenSecret', this.user.twitter.accessTokenSecret  ); // String | The Twitter OAuth 1.0 access token secret granted by Twitter during user authentication.
 								this.set('u.displayName'      , this.user.twitter.displayName        ); // String | The Twitter user's full name.
-								this.set('u.email'            , ""                                   ); // String | Twitter does not provide this variable.
+								this.set('u.email'            , ''                                   ); // String | Twitter does not provide this variable.
 								this.set('u.username'         , this.user.twitter.username           ); // String | The Twitter user's screen name, handle, or alias. Twitter screen names are unique, but subject to change.
 								this.set('u.profileImageURL'  , this.user.twitter.profileImageURL    ); // String | The URL to the Twitter user's profile picture.
 								this.set('u.cachedUserProfile', this.user.twitter.cachedUserProfile  ); // Object | The Twitter user's raw profile, as specified by Twitter's user documentation. Note that the data included in this payload is generated by Twitter and may be changed by them at any time.
 								break;
 							default:
-								console.log("PROVIDER NOT RECOGNIZED");
+								console.log('Provider not recognized');
 						}
-						this.logReport("login");
-						app.user = this.u; // Report user object (and user identity) to main app
-						if(u.displayName){
-							u.displayNameMod = "Test Name"; // u.displayName.replace(" ","<br>");
-						}
+						//console.log(this.u);
+						//console.log(this.app);
+						this.fire('x-login');
 					}
-					//if(!this.u){console.log("U IS NULL")};
 					return;
 				},
 				
@@ -494,26 +474,8 @@ http://stackoverflow.com/questions/33145294/polymer-1-x-formatting-paper-menu-bu
 				
 				_closeModal: function() {
 					this.$.modal.close();
-				},
-
-				logReport(logType){
-					// @param {String} log "logout" or "login"
-					// Write login event to firebase: uid, timestamp and appId
-					// this.$.ajax.body = '{"foo":1, "bar":2}' ;
-					// this.$.ajax.body = JSON.stringify({"foo":1, "bar":2}) ;
-					this.$.ajax.body = JSON.stringify({
-						"timestamp": new Date().getTime(),
-						"logtype": logType,
-						"uid": this.u.uid,
-						// Make sure this element is called from index.html file and wrapped inside <template> with id="app"
-						// Make sure app.js file is called from <script src="app.js"> in index.html
-						// In app.js, set var app = document.querySelector('#app');
-						// And 								app.name = x; // Identifies app for sending login data to centralized firebase for tracking
-						// Where x is application name used for tracking logins in a central firebase
-						"appname": app.name
-					});
 				}
-
+				
 			});
 		})();
 	</script>

@@ -1,0 +1,85 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../my-argenta/my-argenta-form.html">
+<link rel="import" href="../my-argenta/my-argenta-history.html">
+<link rel="import" href="../my-argenta/my-argenta-home.html">
+<link rel="import" href="../my-argenta/my-argenta-image.html">
+<link rel="import" href="../my-argenta/my-argenta-result.html">
+<link rel="import" href="../my-argenta/my-argenta-scatter.html">
+<link rel="import" href="../my-templates/my-data-auth.html">
+<link rel="import" href="../my-templates/my-data-issues.html">
+<link rel="import" href="../my-templates/my-data-fetch.html">
+<link rel="import" href="../my-templates/my-data-save.html">
+<link rel="import" href="../my-templates/my-data-settings.html">
+
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="../../styles/app-theme.html">
+<link rel="import" href="../../styles/app.css">
+
+<dom-module id="my-view-pages">	
+		
+	<template>
+		
+		<style is="custom-style" include="app-theme"></style>
+		<iron-pages attr-for-selected="data-route" selected="{{route}}">										          
+			<section data-route="page01"><my-argenta-home    app={{app}}              ></my-argenta-home   ></section>
+			<section data-route="page02"><my-argenta-history app={{app}} id="history" ></my-argenta-history></section>
+			<section data-route="page03"><my-data-issues     app={{app}}              ></my-data-issues    ></section>
+			<section data-route="page04"><my-data-settings   app={{app}} id="settings"></my-data-settings  ></section>
+			<!--
+			<section data-route="page03">Page 03</section>
+			<section data-route="page04">
+				<google-map style="height:600px" latitude="37.779" longitude="-122.3892" min-zoom="9" max-zoom="11" language="en">
+					<google-map-marker latitude="37.779" longitude="-122.3892"
+														 title="Go Giants!" draggable="true">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/San_Francisco_Giants_Cap_Insignia.svg/200px-San_Francisco_Giants_Cap_Insignia.svg.png" />
+					</google-map-marker>
+				</google-map>
+			</section>
+			<section data-route="page05">Page 05</section>
+			<section data-route="page06">Page 06</section>
+			<section data-route="page07">Page 07</section>
+			<section data-route="page08">Page 08</section>
+			<section data-route="page09">Page 09</section>
+			<section data-route="page10">Page 10</section>
+			<section data-route="page11">Page 11</section>
+			<section data-route="page12">Page 12</section>
+			<section data-route="page13">Page 13</section>
+			-->
+		</iron-pages>
+	
+	</template>
+
+	<script>
+		(function(){
+			//'use strict';
+			Polymer({
+				is: 'my-view-pages',
+				properties: {
+					app: {
+						type: Object,
+						notify: true
+					}
+				}
+			});
+		})();
+	</script>
+	
+</dom-module>

@@ -25,44 +25,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../../bower_components/neon-animation/neon-animatable.html">
 <link rel="import" href="../../../bower_components/neon-animation/neon-animatable-behavior.html">
 <link rel="import" href="../../../bower_components/neon-animation/neon-animated-pages.html">
-<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../../bower_components/paper-spinner/paper-spinner.html">
-<link rel="import" href="../my-argenta-data/my-argenta-data.html">
-<link rel="import" href="../my-argenta-form/my-argenta-form.html">
-<link rel="import" href="../my-argenta-image/my-argenta-image.html">
-<link rel="import" href="../my-argenta-result/my-argenta-result.html">
-<link rel="import" href="../my-argenta-scatter/my-argenta-scatter.html">
-<link rel="import" href="../my-toolbar-login/my-toolbar-login.html">
+<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../my-argenta/my-argenta-form.html">
+<link rel="import" href="../my-argenta/my-argenta-image.html">
+<link rel="import" href="../my-argenta/my-argenta-result.html">
+<link rel="import" href="../my-argenta/my-argenta-scatter.html">
+<link rel="import" href="../my-templates/my-data-auth.html">
+<link rel="import" href="../my-templates/my-data-fetch.html">
+<link rel="import" href="../my-templates/my-data-save.html">
 
 <link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
 
-<dom-module id="my-argenta-view">	
+<dom-module id="my-argenta-home">	
 		
-	<template xis="dom-bind">
+	<template>
 		
-		<style is="custom-style">
+		<style>
 			:host {
-				x--paper-tabs-selection-bar-color: var(--accent-color); /*var(--default-primary-color);*/
-				--paper-button: {
-					@apply(--layout-horizontal);
-					x@apply(--layout-center);
-				  x@apply(--layout-vertical);
-				  @apply(--center-justified);				};
+				--paper-tab-ink: white;
+				/*
+				--paper-tab-ink: var(--accent-color);
+				*/
 			}
-			/*
-			:root /deep/ #ink {
-				color: white;
-			}
-			*/
 			paper-tabs {
-				width: 100%;
+				xwidth: 100%;
 				max-width: 400px;
 				xmargin-bottom: 16px;
-				xmargin-left: auto;
-				xmargin-right: auto;
-				position: fixed;
-				bottom: 0;
-				margin: 0;
+				margin-left: auto;
+				margin-right: auto;
+				xposition: fixed;
+				xbottom: 0;
+				xtop: 0;
+				xmargin: 0;
+				--paper-tabs-selection-bar-color: var(--accent-color);
 			}
 			paper-tabs {
 				background-color: var(--default-primary-color);
@@ -77,49 +74,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}
 		</style>
 		
-		<my-argenta-data id="data"
-										 addy="[[addy]]"
-										 response="{{response}}"
-										 on-my-data-request="_handleRequest"
-										 on-my-data-response="_handleResponse"
-										 on-my-data-error="_handleError"
-		></my-argenta-data>
-		<neon-animated-pages class="flex"
-												 selected="[[selected]]"
-												 entry-animation="fade-in-animation"
-												 exit-animation="fade-out-animation"
-		>
-		<!--
-		<iron-pages class="flex" selected="[[selected]]">
-		-->
-			<my-argenta-form id="form"
-											 addy="{{addy}}"
-											 on-my-form-reset="_handleFormReset"
-											 on-my-form-submit="_handleFormSubmit"
-											 on-my-form-wipe-error="_handleWipeError"
-			></my-argenta-form>
-			<my-argenta-result id="result"
-												 addy="[[addy]]"
-												 estimate="[[response.autoEst]]"
-												 estimate_display="{{estimate_display}}"
-												 on-my-result-reset="_handleResultReset"
-			></my-argenta-result>
-			<my-argenta-image id="image"
-												addy="[[addy]]"
-												imageurl="[[response.image]]"
-												estimate="[[estimate_display]]"
-			></my-argenta-image>
-			<my-argenta-scatter id="scatter"
-													addy="[[addy]]"
-													response="[[response]]"
-													estimate="[[estimate_display]]"
-			></my-argenta-scatter>
-		<!--
-		</iron-pages>
-		-->
-		</neon-animated-pages>
+		<my-data-fetch id="fetch"
+									 addy="[[addy]]"
+	     			       response="{{response}}"
+			     			 	 on-my-data-request="_handleRequest"
+					     		 on-my-data-response="_handleResponse"
+							     on-my-data-error="_handleError">
+		</my-data-fetch>
 		
-		<paper-tabs selected="{{selected}}" align-bottom>
+		<paper-tabs selected="{{selected}}" xalign-bottom>
 			<!--
 			<paper-tab><iron-icon icon="social:group"   alt="Referrals"></iron-icon></paper-tab>
 			<paper-tab><iron-icon icon="account-circle" alt="Account"></iron-icon></paper-tab>
@@ -127,24 +90,71 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			<paper-tab><iron-icon icon="history"        alt="History"></iron-icon></paper-tab>
 			<paper-tab><iron-icon icon="save"           alt="Save"></iron-icon></paper-tab>
 			-->
-			<paper-tab><iron-icon icon="home"           alt="Home"></iron-icon></paper-tab>
-			<paper-tab><iron-icon icon="star"           alt="Result"></iron-icon></paper-tab>
-			<paper-tab><iron-icon icon="perm-media"     alt="Picture"></iron-icon></paper-tab>
+			<paper-tab id="addy"  ><iron-icon icon="home"       alt="Home"   ></iron-icon></paper-tab>
+			<paper-tab id="result"><iron-icon icon="star"       alt="Result" ></iron-icon></paper-tab>
+			<paper-tab id="photo" ><iron-icon icon="perm-media" alt="Picture"></iron-icon></paper-tab>
+			<!--
 			<paper-tab><iron-icon icon="assessment"     alt="Chart"></iron-icon></paper-tab>
+			-->
 		</paper-tabs>
+		<paper-tooltip for="addy"  >Enter address</paper-tooltip>
+		<paper-tooltip for="result">See result</paper-tooltip>
+		<paper-tooltip for="photo" >See photo</paper-tooltip>
+		
+		<neon-animated-pages class="flex"
+												 selected="[[selected]]"
+												 entry-animation="fade-in-animation"
+												 exit-animation="fade-out-animation">
+						
+		<!--
+		<iron-pages class="flex" selected="[[selected]]">
+		-->
+			<my-argenta-form id="form"
+											 addy="{{addy}}"
+											 on-my-form-reset="_handleFormReset"
+											 on-my-form-submit="_handleFormSubmit"
+											 on-my-form-wipe-error="_handleWipeError">
+			</my-argenta-form>
+			<my-argenta-result id="result"
+												 addy="[[addy]]"
+												 estimate="[[response.autoEst]]"
+												 estimate-display="{{estimateDisplay}}"
+												 on-my-result-reset="_handleResultReset"
+												 on-my-result-again="_handleResultAgain">
+			</my-argenta-result>
+			<my-argenta-image id="image"
+												addy="[[addy]]"
+												image-url="[[response.image]]"
+												estimate="[[estimateDisplay]]">
+			</my-argenta-image>
+			<!--
+			<my-argenta-scatter id="scatter"
+													addy="[[addy]]"
+													response="[[response]]"
+													estimate="[[estimateDisplay]]"
+			></my-argenta-scatter>
+			-->
+		<!--
+		</iron-pages>
+		-->
+		</neon-animated-pages>
 	
 	</template>
 
 	<script>
 		(function(){
+			//'use strict';
 			Polymer({
-				is: 'my-argenta-view',
+				is: 'my-argenta-home',
 				behaviors: [Polymer.NeonAnimatableBehavior],
 				listeners: {
-					//"my-form-reset"      : "_handleFormReset"  ,
-					//"my-form-submit"     : "_handleFormSubmit" ,
-					//"my-form-wipe-error" : "_handleWipeError"		
+					//'my-form-reset'      : '_handleFormReset'  ,
+					//'my-form-submit'     : '_handleFormSubmit' ,
+					//'my-form-wipe-error' : '_handleWipeError'		
 				},
+				observers: [
+					'_signedInChanged(app.meta.signedIn)'
+				],
 				properties: {
 					selected: {
 						type: Number,
@@ -154,25 +164,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						type: Object,
 						notify: true
 					},
-					estimate_display: {
+					estimateDisplay: {
 						type: String,
 						notify: true
 					}
 				},
 				_resetData: function() {
 					this.response = null;
-					this.$.scatter.$.chart.hidden = true;
+					//this.$.scatter.$.chart.hidden = true;
 					this.$.result.$.error.hidden = true;
 				},
 				_handleFormReset: function() {
-					this.addy = "";
+					this.addy = '';
 					this._resetData();
+					this.$.result.$.reset.hidden = true;
 				},
 				_handleFormSubmit: function() {
+					this.$.result.$.reset.hidden = true;
 					this._resetData();
 					this.selected = 1;
 					this.$.form.$.fab.disabled = true;
-					this.$.data.generateRequest();
+					this.$.fetch.generateRequest();
 				},
 				_handleRequest: function() {
 					this.$.result.$.spinner.reset();
@@ -181,8 +193,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				_handleResponse: function() {
 					this.$.result.$.spinner.reset();
 					this.$.result.$.spinner.active = false;
-					if(this.estimate_display){
-						this.$.scatter.$.chart.hidden = false;
+					if(this.estimateDisplay){
+						//this.$.scatter.$.chart.hidden = false;
+						this.$.result.$.error.hidden = true;
+						this.$.result.$.reset.hidden = false;
+						this._logHistory();
 					}
 					else{
 						this._handleError();
@@ -192,12 +207,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					this.$.result.$.spinner.reset();
 					this.$.result.$.spinner.active = false;
 					this.$.result.$.error.hidden = false;
+					this.$.result.$.reset.hidden = true;
 				},
 				_handleWipeError: function() {
 					this.$.result.$.error.hidden = true;
 				},
 				_handleResultReset: function() {
 					this.selected = 0;
+				},
+				_handleResultAgain: function() {
+					this._handleResultReset();
+					this._handleFormReset();
+				},
+				_signedInChanged: function() {
+					this._handleFormReset();
+				},
+				_logHistory: function() {
+					if(this.app.settings.history) {
+						//var d = new Date();
+						this.fire('log-history', { address: this.addy,
+																		   autoEst: this.response.autoEst,
+											 							 	 display: this.estimateDisplay,
+											 								 image: this.response.image
+																			 //timestamp: d.getTime(), // Using event.timeStamp
+							                         //date: d.toDateString(),
+																		 });
+					}
 				}
 			});
 		})();
